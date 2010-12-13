@@ -8,6 +8,8 @@ package projetAscenseur;
 public class Main {
     public static void main(String[] args){
          Simulateur simu = new Simulateur();
+         Manager manager = new Manager(simu);
+         simu.setManager(manager);
         
     }
     

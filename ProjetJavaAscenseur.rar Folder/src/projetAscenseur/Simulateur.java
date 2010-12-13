@@ -32,6 +32,7 @@ public class Simulateur extends JFrame{
     
     //********************ATTRIBUTS*****************************
     private Immeuble immeuble;
+    private Manager manager;
     private PersonneFactory fabrique;
     private static boolean enCreation = true;
     private Ascenseur ascenseur;
@@ -123,7 +124,15 @@ public class Simulateur extends JFrame{
             Logger.getLogger(Simulateur.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    public void setManager(Manager manager){
+        this.manager = manager;
+    }
+
+    public Manager getManager(){
+        return this.manager;
+    }
+
      public void initMenuPlugin(){
         try {
             PluginLoader = new PluginLoader("plugins");
@@ -382,7 +391,7 @@ public class Simulateur extends JFrame{
                     miseAjourBoutonCreation();
                     //creation immeuble
                     int tmp = (Integer)listNbEtages.getSelectedItem();
-                    immeuble = new Immeuble(tmp);  
+                    immeuble = new Immeuble(tmp,manager);
                 
                     //creation des personnes 
                     fabriquePersonne();
@@ -737,6 +746,8 @@ public class Simulateur extends JFrame{
             }
         return true;
     }
+
+    
         
     
 

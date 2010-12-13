@@ -7,9 +7,11 @@ import projetAscenseur.strategy.ComportementAbstrait;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.System;
 import java.net.URL;
 import javax.swing.*;
 import java.util.ArrayList;
+
 import projetAscenseur.personne.concretePersonne.Groupe;
 /**
  * classe representant l'ascenseur dans l'immeuble
@@ -251,7 +253,11 @@ public class Ascenseur extends JFrame implements Runnable {
             Point c = new Point((int)b.getX(), (int)(a.getY() + b.getY()));
             this.setLocation(c);
             int value = this.getEtageCourant()+1;
-            this.setEtageCourant(value);              
+            this.setEtageCourant(value);
+            //todo change le libel du manager
+            Manager mana = this.immeuble.getManager();
+            mana.setNumEtage(this.numAscenseur, this.etageCourant);
+
         }
     }
 
@@ -268,6 +274,8 @@ public class Ascenseur extends JFrame implements Runnable {
             this.setLocation(c);
             int value = this.getEtageCourant()-1;
             this.setEtageCourant(value);
+            Manager mana = this.immeuble.getManager();
+            mana.setNumEtage(this.numAscenseur, this.etageCourant);
         }
     }
     

@@ -34,6 +34,7 @@ public class Immeuble extends JFrame implements Runnable{
     private Thread thread;
     private TpsVisitor tpsVisitor = new TpsVisitor();
     private HumeurVisitor humeurVisitor = new HumeurVisitor();
+    private Manager manager;
     
     //**************************CONSTRUCTEURS**********************************
     public Immeuble(){}
@@ -58,12 +59,17 @@ public class Immeuble extends JFrame implements Runnable{
      * constructeur utilisé prenant un etage et un nombre de personnes
      * @param NBEtages le nombre d'etages dans l'immeuble
      */
-    public Immeuble(int NBEtages){
+    public Immeuble(int NBEtages, Manager manager){
     	super("Immeuble");
     	NBEtage = NBEtages;
+        this.manager = manager;
         initImmeuble();
         estCree = true;
         
+    }
+
+    public Manager getManager(){
+        return manager;
     }
     
     //*************************GETTERS AND SETTERS******************************************
@@ -295,4 +301,5 @@ public class Immeuble extends JFrame implements Runnable{
         }
 
     }
+
 }
