@@ -3,10 +3,6 @@
  * and open the template in the editor.
  */
 
-package projetAscenseur;
-
-package projetAscenseur.personne;
-
 import projetAscenseur.*;
 import projetAscenseur.visitor.Visitor;
 import java.awt.Color;
@@ -39,6 +35,7 @@ public abstract class AppelDest extends JLabel{
 
 
     }
+}
 
 
 

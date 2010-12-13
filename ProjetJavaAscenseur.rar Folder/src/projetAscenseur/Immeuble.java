@@ -223,7 +223,25 @@ public class Immeuble extends JFrame implements Runnable{
      public static void ajouterAscenseur(Ascenseur asc){
     	listeAscenseur.add(asc);
     }
-     
+
+
+     public boolean allInMaintenance(){
+         int size = listeAscenseur.size();
+         for(int i=0; i<size; i++){
+             if(!listeAscenseur.get(i).getMaintenance())
+                 return false;
+         }
+         return true;
+     }
+
+      public boolean allNotInMaintenance(){
+         int size = listeAscenseur.size();
+         for(int i=0; i<size; i++){
+             if(listeAscenseur.get(i).getMaintenance())
+                 return false;
+         }
+         return true;
+     }
      /**
       * supprime un ascenseur 
       * @param asc l'ascenseur a supprimer

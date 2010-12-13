@@ -129,8 +129,13 @@ public class Simulateur extends JFrame{
         this.manager = manager;
     }
 
+
     public Manager getManager(){
         return this.manager;
+    }
+
+    public Immeuble getImmeuble(){
+        return immeuble;
     }
 
      public void initMenuPlugin(){
@@ -404,7 +409,13 @@ public class Simulateur extends JFrame{
                     
                     menuPlugin2.setEnabled(true);
                     }
-                 else return;
+                 else {
+                    manager.initValues();
+                    return;
+                 }
+                 manager.initValues();
+
+                //initialise les valeurs des etats dans l'inteface du manager
             }
             });
             
@@ -420,10 +431,15 @@ public class Simulateur extends JFrame{
                     Ascenseur asc = listAscenseur.get(i);
                     asc.dispose();
                     asc.getThread().stop();
+                    
                 }
                 miseAjourBoutonStop();
-                    
+                
                 menuPlugin2.setEnabled(false);
+                listAscenseur.clear();
+                manager.initValues();
+                //manager.initValueBoutonAsc();
+
             }
         });
         
@@ -688,6 +704,7 @@ public class Simulateur extends JFrame{
             }
             else afficheMessage("Vous avez atteint le nombre maximal d'ascenseur");
         }
+        
      }
     
     /**

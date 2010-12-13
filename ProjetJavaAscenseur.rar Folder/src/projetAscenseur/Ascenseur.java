@@ -36,6 +36,7 @@ public class Ascenseur extends JFrame implements Runnable {
     private boolean arrete = false;
     private Immeuble immeuble;
     private int temporisation;
+    private boolean maintenance = false;
     
     //****************************CONSTRUCTEURS**********************************
     /**
@@ -116,7 +117,9 @@ public class Ascenseur extends JFrame implements Runnable {
     
     public boolean isArrete() {  return arrete;  }    
         
-    public void setArrete(boolean arrete) {    this.arrete = arrete;   }
+    public void setArrete(boolean arrete) {
+        this.arrete = arrete;
+    }
     
     public boolean estArrete(){ return arrete;}
     
@@ -127,6 +130,17 @@ public class Ascenseur extends JFrame implements Runnable {
     public int getTemporisation(){ return temporisation;}
     
     public  void setTemporisation(int temporisation){ this.temporisation = temporisation;}
+
+    public void setMaintenance(boolean bool){
+        this.maintenance = bool;
+    }
+
+    /**
+     * todo getMaintenance
+     */
+    public boolean getMaintenance(){
+        return this.maintenance;
+    }
     
     //********************************FONCTIONS***********************************//
         
@@ -258,7 +272,7 @@ public class Ascenseur extends JFrame implements Runnable {
             this.setEtageCourant(value);
             //todo change le libel du manager
             Manager mana = this.immeuble.getManager();
-            mana.setNumEtage(this.numAscenseur, this.etageCourant);
+            mana.setValuesAsc(this.numAscenseur, this.etageCourant, 1500);
 
         }
     }
@@ -277,7 +291,7 @@ public class Ascenseur extends JFrame implements Runnable {
             int value = this.getEtageCourant()-1;
             this.setEtageCourant(value);
             Manager mana = this.immeuble.getManager();
-            mana.setNumEtage(this.numAscenseur, this.etageCourant);
+            mana.setValuesAsc(this.numAscenseur, this.etageCourant, 750);
         }
     }
     
@@ -400,5 +414,7 @@ public class Ascenseur extends JFrame implements Runnable {
         for(int i = debut; i>=0;i--)
             supprimerPersonneAscenseur(listePersonne.get(i));
     }
+
+
 	
 }//fin de la classe
