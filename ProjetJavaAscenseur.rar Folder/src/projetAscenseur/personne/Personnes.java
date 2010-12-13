@@ -8,7 +8,7 @@ import java.awt.Toolkit;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-
+import java.io.*;
 /**
  * classe abstraite representant les personnes (groupe et personneSeule
  * @author Checconi maxime, Pilot guillaume et Canessa Marine
@@ -152,6 +152,7 @@ public abstract class Personnes extends JLabel{
             Etage eta = (Etage)obj;
             eta.listPersonneAdd(this);
     	}
+
     }
     
     
@@ -208,6 +209,7 @@ public abstract class Personnes extends JLabel{
      * @param asc l'ascenseur concerne
      */
     public void descendreDeAscenseur(Ascenseur asc){
+
         supprimerDansListe(asc);
     	ajouterDansListe(this.getEtageArrive());
         Immeuble.addPersArrivee(this); 
@@ -215,6 +217,8 @@ public abstract class Personnes extends JLabel{
         this.setEstDsAsc(false);
         setColor(Color.gray);
         updateJLabelPers();
+
+        System.out.println("Descend de l'ascenseur"); //todo
     }
     
  

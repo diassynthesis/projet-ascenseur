@@ -24,7 +24,11 @@ public class PluginLoader {
          Object o = null;
         try {
             //c = Class.forName(className);
-            cl = new URLClassLoader(new URL[]{new URL("file:/home/max06/ProjetJavaAscenseur/build/plugins/")});
+            //Ancien
+            //cl = new URLClassLoader(new URL[]{new URL("file:/home/max06/ProjetJavaAscenseur/build/plugins/")});
+
+            cl = new URLClassLoader(new URL[]{new URL("file:/home/Bureau/Mon_bon_projet_asc/ProjetJavaAscenseur.rar Folder/plugins/projetAscenseur/strategy/concreteStrategy")});
+
 //getClass().getClassLoader()+
             c = cl.loadClass(className);
 

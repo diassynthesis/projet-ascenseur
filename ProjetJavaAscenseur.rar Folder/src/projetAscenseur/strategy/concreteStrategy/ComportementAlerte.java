@@ -27,20 +27,16 @@ public class ComportementAlerte implements ComportementAbstrait{
      */
     public void seDeplacer()
     {
-        /*if((asc.isMonte())&&(!asc.isPortesOuvertes())) //si l'asc est en mode "monte"
-        {
-            	asc.setArrete(true);
-		asc.ouvrirPorte();
-
-         }
-        else if((!asc.isMonte())&&(!asc.isPortesOuvertes())) //si l'ascenseur dessend
-        {
-            	asc.setArrete(true);
-		asc.ouvrirPorte();
-        }*/
+        
 
 	asc.setArrete(true);							// On arrete l'ascenceur
-	asc.ouvrirPorte();							// On lui fait ouvrir les portes
+	//asc.ouvrirPorte();							// On lui fait ouvrir les portes
+        if(asc.getListePersonne().size() != 0)
+        {
+            attendre();
+        }
+
+
     }
 
 
@@ -49,17 +45,27 @@ public class ComportementAlerte implements ComportementAbstrait{
      * quand tout le monde est monté il ferme ses portes
      */
     public void attendre(){
-    	while(ascenseurDejaLa()){
-            try {
-                    Thread.sleep(asc.getTemporisation());
-            } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-            }
-    	}
-
+    	
         asc.ouvrirPorte();							// On ouvre les portes pour laisser sortir les gens et on ne les referment pas
 
+        Etage Etage_alerte = new Etage(asc.getEtageCourant());
+
+
+        for(int i=0;i<asc.getListePersonne().size();i++)
+       {
+           //asc.supprimerPersonneAscenseur(asc.getListePersonne().get(i));
+           asc.getListePersonne().get(i).setEtageArrive(Etage_alerte);
+           asc.reveillerPersonne(asc.getListePersonne().get(i));
+
+           System.out.println("Liste de personne arrivé"); //todo
+
+           System.out.println((asc.getImmeuble()).getListePersonneArrivee()); //todo
+
+
+        }
+
+        
+       asc.fermerPorte();
     }
 
     /**
@@ -93,7 +99,7 @@ public class ComportementAlerte implements ComportementAbstrait{
      }
 
     public String getName() {
-        return "Arret Etage";
+        return "Mode alerte";
     }
 
     public Class getType() {

@@ -121,6 +121,8 @@ public class Ascenseur extends JFrame implements Runnable {
     public boolean estArrete(){ return arrete;}
     
     public void setImmeuble(Immeuble immeuble) {this.immeuble = immeuble;}
+
+    public Immeuble getImmeuble() {return immeuble;} //todo
     
     public int getTemporisation(){ return temporisation;}
     
