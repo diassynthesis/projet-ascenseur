@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * classe abstraite representant les AppelDest (groupe et AppelDesteule
  * @author Checconi maxime, Pilot guillaume et Canessa Marine
  */
-public abstract class Appel extends JLabel{
+public class Appel extends JLabel{
 
     //************************ATTRIBUTS***************************
 
@@ -42,11 +42,11 @@ public abstract class Appel extends JLabel{
 
     }
 
-    public Appel(Etage src, Etage dst, boolean mont)
+    public Appel(Etage src, Etage dst, boolean monte)
     {
         this.source=src;
         this.dest=dst;
-        this.monte=mont;
+        this.monte=monte;
 
     }
 
