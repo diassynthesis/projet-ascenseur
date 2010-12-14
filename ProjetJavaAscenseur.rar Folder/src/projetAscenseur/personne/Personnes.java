@@ -284,9 +284,9 @@ public abstract class Personnes extends JLabel{
         //la personne veut prendre l'ascenseur, on met en route le temps d'attente
     	//Si le bouton n'est pas appuye, la personne appuie
     	Etage etageCourant = this.getEtageDepart();
-    	
         if(!etageCourant.isBoutonAscenseur()){
-            Immeuble.ajouterAppel(etageCourant); 
+            Immeuble.ajouterAppel(etageCourant,this.etageArrive,this.veutMonter());
+
         }
     }
 
