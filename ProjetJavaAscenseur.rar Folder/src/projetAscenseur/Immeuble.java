@@ -29,6 +29,12 @@ public class Immeuble extends JFrame implements Runnable{
     private static ArrayList<Etage> listeEtage;
     private static ArrayList<Ascenseur> listeAscenseur;
     private static ArrayList<Etage> listeAppel;
+    
+    //Rajouter pour nouveau comportement
+    private static ArrayList<Appel> listeAppel_Dest;
+    //private static ArrayList<Etage> retourAppel_Dest;
+    //Fin du rajout
+
     private static ArrayList<Personnes> listePersonneArrivee;
     private static ArrayList<Personnes> listePersonnesCrees;
     private Thread thread;
@@ -47,6 +53,7 @@ public class Immeuble extends JFrame implements Runnable{
     	super("Immeuble");
     	NBEtage = NBEtages;
         listeAppel = new ArrayList();
+        listeAppel_Dest = new ArrayList<Appel>();                            // Rajouter pour nouveau comportement
         listeEtage = new ArrayList<Etage>();
         listeAscenseur = new ArrayList<Ascenseur>();
         listePersonneArrivee =  new ArrayList<Personnes>();
@@ -108,7 +115,62 @@ public class Immeuble extends JFrame implements Runnable{
     public void setTpsVisitor(TpsVisitor tpsVisitor) {    this.tpsVisitor = tpsVisitor;   }
     
     public boolean getEstCree(){ return estCree;}
-    
+
+
+    //*******************************Comportement Optimisation**************************************
+    // Rajouter pour nouveau comportement
+
+
+    /*public static ArrayList<Appel> getListeAppel_Dest() {
+        return listeAppel_Dest;
+    }
+
+    public static ArrayList<Etage> getListeAppel_V2_src() {
+
+        int i =0;
+
+
+        while(!listeAppel_Dest.isEmpty())
+        {
+            retourAppel_Dest.add((listeAppel_Dest.get(i)).getDest());
+            i++;
+
+        }
+
+
+        return retourAppel_Dest;
+    }
+
+    public static int getListeAppel_V2_monte(Etage src)
+    {
+
+
+
+    }*/
+/*
+    public static Etage AscLePlusProcheTemporellement(asc)
+    {
+        Etage retour;
+
+        listeAppel_Dest( this.getListeAppel() );
+
+
+
+
+        listeAppel
+
+        return retour;
+    }
+
+
+
+    // Fin du rajout
+    //*******************************Fin Comportement Optimisation**************************************
+
+
+
+
+
     //*******************************METHODES**************************************
     
     /**
