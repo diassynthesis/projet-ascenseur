@@ -75,38 +75,12 @@ public class Enregistrement extends javax.swing.JFrame {
      */
     public Enregistrement() {
         System.out.println("Debut du Enregistrement");
-        try {
-            //initialise les composant le la fenetre
-            initEnregistrement();
-            //Initilialisation des Statistiques
-            stats = new Statistiques();
+        //initialise les composant le la fenetre
+        initEnregistrement();
+        initClassConfiguration();
+        //Initilialisation des Statistiques
+        initStats();
 
-            //Initialisation du decoder
-            XMLDecoder decoder = new XMLDecoder(new FileInputStream(ConfFile));
-            //Si on a pas généré d'exeption, c'est que le fichier existe déja
-            //On peut en extraire les données
-            ClassFichierConfiguration = (FichierConfiguration) decoder.readObject();
-        } catch (Exception es) {
-            //Initialisation de l'encoder
-            try {
-
-                System.out.println("Erreur dans l'encodage");
-                XMLEncoder encoder = new XMLEncoder(new FileOutputStream(ConfFile));
-
-                //On intilialise l'objet
-                ClassFichierConfiguration = new FichierConfiguration();
-                ClassFichierConfiguration.setDefaultParamsJournee();
-                ClassFichierConfiguration.setDefaultParamsNuitWeekEnd();
-                ClassFichierConfiguration.setDefaultLogin();
-                //On ecrit l'objet dans le fichier
-                encoder.writeObject(ClassFichierConfiguration);
-                encoder.flush();
-                encoder.close();
-
-            } catch (Exception exception) {
-                System.out.printf("Erreur dans l'encodage");
-            }
-        }
     }
 
     public void setVisible(boolean affi) {
@@ -145,6 +119,33 @@ public class Enregistrement extends javax.swing.JFrame {
         jTextFieldSousNuit.setText(sousSolsN);
         jTextFieldRedNuit.setText(RdCN);
         jTextFieldAutreNuit.setText(autresEtagesN);
+    }
+
+    private void initStats(){
+
+        if(stats == null){
+            try{
+                XMLDecoder decoder = new XMLDecoder(new FileInputStream(StatsFile));
+                stats = (Statistiques)decoder.readObject();
+            }catch(Exception IException){
+                System.out.println("Pas encore de fichier de statistiques créé. On le créé");
+                stats = new Statistiques();
+                sauvegarde();
+            }
+        }
+    }
+
+    private void initClassConfiguration(){
+         if(ClassFichierConfiguration == null){
+            try{
+                XMLDecoder decoder = new XMLDecoder(new FileInputStream(ConfFile));
+                ClassFichierConfiguration = (FichierConfiguration)decoder.readObject();
+            }catch(Exception IException){
+                System.out.println("Pas encore de fichier de statistiques créé. On le créé");
+                ClassFichierConfiguration = new FichierConfiguration();
+                sauvegarde();
+            }
+        }
     }
 
     private void setValuesJournee(){
@@ -304,16 +305,24 @@ public class Enregistrement extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Retourne les statistique d'une date à une autre en fonction des différents ascenseur
+     * Est formaté pour être receptioner par JFreeChart
+     * @param dateDebut
+     * @param dateFin
+     * @return
+     */
     public ArrayList getStatistiques(Date dateDebut, Date dateFin) {
 
-        ArrayList resultats = new ArrayList();
 
-        return resultats;
+
+        return new ArrayList();
 
     }
 
-    public boolean setStatistiques() {
+    public boolean setStatistiques(Ascenseur asc) {
 
+        stats.addStatistiques(new java.util.Date(), asc.getNumAscenseur(), -1);
         return true;
 
     }
@@ -322,7 +331,7 @@ public class Enregistrement extends javax.swing.JFrame {
      * @sauvegarde
      */
     public void sauvegarde() {
-        System.out.println("Sauvegarde");
+        System.out.println("Sauvegarde des fichiers");
         try {
             XMLEncoder encoderConf = new XMLEncoder(new FileOutputStream(ConfFile));
             XMLEncoder encoderStats = new XMLEncoder(new FileOutputStream(StatsFile));
@@ -330,11 +339,9 @@ public class Enregistrement extends javax.swing.JFrame {
             //On intilialise l'objet            
             //On ecrit l'objet dans le fichier
             encoderConf.writeObject(ClassFichierConfiguration);
-            stats.addStatistiques(new java.util.Date(), 1, 5);
-            encoderConf.flush();
             encoderStats.writeObject(stats);
 
-            //On vide les buffers
+            //On vide les buffers et on ferme les fichiers
             encoderStats.close();
             encoderConf.close();
         } catch (FileNotFoundException e) {
