@@ -354,7 +354,7 @@ public class Enregistrement extends javax.swing.JFrame {
     // interface
     public void initEnregistrement() {
         this.initComponents();
-    }
+    } 
 
     /** This method is called from within the constructor to
      * initialize the form.
