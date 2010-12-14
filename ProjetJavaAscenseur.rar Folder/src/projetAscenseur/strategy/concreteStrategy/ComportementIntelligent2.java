@@ -15,7 +15,7 @@ public class ComportementIntelligent2 implements ComportementAbstrait{
     
     
     public ComportementIntelligent2(){}
-    public ComportementIntelligent2(Ascenseur asc)
+    public ComportementIntelligent2(Ascenseur asc, int parite, Etage defaut)
     {
         this.asc=asc;
     }
@@ -145,4 +145,5 @@ public class ComportementIntelligent2 implements ComportementAbstrait{
     public Class getType() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    public int getParite(){return -1;}
 }

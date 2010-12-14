@@ -157,6 +157,7 @@ public class ComportementSupraIntelligent2 implements ComportementAbstrait{
     public Class getType() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-        
+
+    public int getParite(){return -1;}
   
 }

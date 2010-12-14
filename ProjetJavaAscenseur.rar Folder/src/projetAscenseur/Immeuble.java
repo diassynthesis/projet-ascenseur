@@ -352,6 +352,61 @@ public class Immeuble extends JFrame implements Runnable{
     	return null;
     }
     
+    //********************************* Methodes pour la gestion d'économie d'énergie ************************
+    /**
+     * permet de savoir si un ascenseur est le plus proche d'un des etages appelants
+     * @param asc l'ascenseur concernee
+     * @return l'etage duquel il est le plus pres ou null si il est le plus eloigne
+     */
+    public static Etage ascenseurLePlusProcheEnergiquement(Ascenseur asc){
+
+        //Est-il interrompable ?
+        //On établit la liste des étages qui peuvent l'interompre
+
+        //Etage d'appel est-il supérieur ?
+
+        
+        ArrayList<Ascenseur> listeAsc = getListeAscenseur();
+    	//ArrayList<Etage> etageAppelant = getListeAppel();
+    	int val = Immeuble.NBEtage; //le nombre max d'etage
+    	Ascenseur ascSelect = asc;
+    	int valTest = Immeuble.NBEtage;
+    	Etage etageRenvoye = null;
+    	//pour chaque ascenseur on va tester si c lui le plus proche
+    	for(int i = 0; i< listeAsc.size();i++){
+            //Si l'ascenseur courant est vide
+            if(listeAsc.get(i).getListePersonne().size()==0){
+                for(int j =0; j<listeAppel.size();j++){
+
+                    int distanceEnergetique = 0;
+                    //valTest = Math.abs(listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
+                    
+
+                    if(valTest<val){//normalement avec cette condition un seul ascenseur prend la main pas de conflit
+                        ascSelect = listeAsc.get(i);
+                        etageRenvoye = listeAppel.get(j);
+                        val = valTest;
+                    }
+                }
+            }
+    	}
+    	if(ascSelect == asc){
+    		return etageRenvoye;
+    	}
+    	return null;
+    }
+
+    public boolean estInterrompable(Ascenseur asc,Appel ap){
+
+        if( ap.getDest().getNumEtage() % asc.getComportement().getParite() == 0)
+            return true;
+        else
+            return false;
+
+    }
+    
+    //********************************* FIN Methodes pour la gestion d'économie d'énergie ************************
+
     /**
      * methode qui ecrit un fichier texte contenant les statistiques de la simulation
      */
