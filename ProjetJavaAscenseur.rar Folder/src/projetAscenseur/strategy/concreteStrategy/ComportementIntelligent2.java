@@ -15,7 +15,7 @@ public class ComportementIntelligent2 implements ComportementAbstrait{
     
     
     public ComportementIntelligent2(){}
-    public ComportementIntelligent2(Ascenseur asc, int parite, Etage defaut)
+    public ComportementIntelligent2(Ascenseur asc)
     {
         this.asc=asc;
     }

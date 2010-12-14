@@ -12,17 +12,17 @@ import projetAscenseur.strategy.ComportementAbstrait;
 public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
 
     private Ascenseur asc;
-    private int parite;             // mode de fonctionnement pair si vaut 0 et impair si vaut 1
-    private Etage EtageDefaut;
+    //private int parite;             //todo // mode de fonctionnement pair si vaut 0 et impair si vaut 1
+    //private Etage EtageDefaut;      //todo
     private int NextHop;
 
 
     public ComportementOptimisationDuTrajet(){}
-    public ComportementOptimisationDuTrajet(Ascenseur asc, int parite, Etage defaut)
+    public ComportementOptimisationDuTrajet(Ascenseur asc ) //, int parite, Etage defaut) //todo
     {
         this.asc=asc;
-        this.parite=parite;
-        this.EtageDefaut=defaut;
+        //this.parite=parite;           //todo
+        //this.EtageDefaut=defaut;      //todo
 
     }
 
@@ -31,7 +31,7 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
      */
     public void seDeplacer()
     {
-        /*if(!asc.getMaintenance())                            // Si l'ascenseur n'est pas en maintenance
+        if(!asc.getMaintenance())                            // Si l'ascenseur n'est pas en maintenance
         {
 
             if( Immeuble.AscLePlusProcheTemporellement(asc) != null)            // Si il existe un étage pour la prochaine étape
@@ -76,7 +76,7 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
             asc.fermerPorte();
 
         }
-*/
+
     }
 
 
@@ -88,6 +88,42 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
     {
         System.out.println("L'ascenseur doit récupérer une personne");
         // Faire attention de prendre en compte qu'il est possible que l'ascenseur se soit juste replacé
+
+        // Test d'un copie colle de l'autre programme todo
+
+        while(ascenseurDejaLa()){
+    	try {
+            Thread.sleep(asc.getTemporisation());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        }
+
+        asc.ouvrirPorte();
+        while(asc.quelqunVeutDessendreDeAsc()!=null)
+        {
+            asc.reveillerPersonne(asc.quelqunVeutDessendreDeAsc());
+        }
+         while(asc.quelqunVeutMonterDansAsc()!= null){
+             if(accepterPersonne(asc.quelqunVeutMonterDansAsc())==true){
+                 asc.reveillerPersonne(asc.quelqunVeutMonterDansAsc());
+             }
+        }
+
+         try {
+            Thread.sleep(asc.getTemporisation());
+        } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        asc.fermerPorte();
+
+
+
+
+        // Fin Test todo
+
+
     }
 
     /**
