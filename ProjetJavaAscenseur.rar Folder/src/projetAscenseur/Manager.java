@@ -24,6 +24,8 @@ import projetAscenseur.strategy.concreteStrategy.ComportementArretEtage;
 import projetAscenseur.strategy.ComportementAbstrait;
 import fr.unice.plugin.Plugin;
 import fr.unice.plugin.PluginLoader;
+//import de la classe qui gere l'édition des variables!
+import projetAscenseur.Enregistrement;
 
 /**
  * classe representant l'interface graphique de la simulation
@@ -104,6 +106,9 @@ public class Manager extends JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
 
+    //fenetre de modification des variable
+    private Enregistrement enregistrement;
+
     //************************ACCESSEURS*****************************
     public static boolean isEnCreation() {
         return enCreation;
@@ -119,8 +124,14 @@ public class Manager extends JFrame {
         simulateur = sim;
 
         try {
+            // init fenetre du manager
             initManager();
             this.setVisible(true);
+            //init fenetre de variables
+            enregistrement = new Enregistrement();
+            enregistrement.setVisible(false);
+
+
         } catch (MalformedURLException ex) {
             Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -531,7 +542,7 @@ public class Manager extends JFrame {
     }// </editor-fold>
 
     private void jMenuItemAlgorithmeActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+        enregistrement.setVisible(true);
     }
 
     private void jButtonMaintenance4ActionPerformed(java.awt.event.ActionEvent evt) {
