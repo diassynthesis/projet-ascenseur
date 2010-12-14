@@ -27,6 +27,7 @@ public abstract class Appel extends JLabel{
     private Etage source;
     private Etage dest;
     private boolean monte;              //Si vaut 1 l'utilisateur
+    private Ascenseur asc;
 
     private ArrayList<Appel> listeAppel;
 
