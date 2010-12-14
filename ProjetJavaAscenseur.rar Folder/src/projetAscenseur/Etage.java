@@ -147,7 +147,7 @@ public class Etage extends JPanel{
     }
 
 
-       
+     
     /**
      * permet de chercher un etage dans la liste d'etages
      * @param numEtage le numero de l'etage cherche

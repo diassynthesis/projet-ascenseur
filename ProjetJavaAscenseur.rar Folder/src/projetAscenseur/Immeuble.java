@@ -52,8 +52,7 @@ public class Immeuble extends JFrame implements Runnable{
     public Immeuble(int NBEtages,String test){
     	super("Immeuble");
     	NBEtage = NBEtages;
-        listeAppel = new ArrayList();
-        listeAppel_Dest = new ArrayList<Appel>();                            // Rajouter pour nouveau comportement
+        listeAppel = new ArrayList();                       // Rajouter pour nouveau comportement
         listeEtage = new ArrayList<Etage>();
         listeAscenseur = new ArrayList<Ascenseur>();
         listePersonneArrivee =  new ArrayList<Personnes>();
@@ -244,6 +243,7 @@ public class Immeuble extends JFrame implements Runnable{
         listeAscenseur = new ArrayList<Ascenseur>();
         listePersonneArrivee = new ArrayList<Personnes>(); 
         listePersonnesCrees =  new ArrayList<Personnes>();
+        listeAppel_Dest = new ArrayList<Appel>();
         thread = new Thread(this);
         thread.start();
         tailleEtage = this.dimensionDefaut.height/getNBEtage();
@@ -288,7 +288,8 @@ public class Immeuble extends JFrame implements Runnable{
 
         //On passe en mode appel pour le manager
         Appel ap = new Appel(etageDepart,etageArrivee,monte);
-        //listeAppel_Dest.add(ap);
+        System.out.println("Appel de :"+etageDepart.getNumEtage());
+        listeAppel_Dest.add(ap);
         //Pour le simulateur
     	listeAppel.add(etageDepart);
         etageDepart.setBoutonAscenseur(true);
@@ -307,6 +308,11 @@ public class Immeuble extends JFrame implements Runnable{
             
             etage.updateJLabelBouton();
         }
+        //On passe en mode appel pour le manager
+        /*Appel ap = new Appel(etageDepart,etageArrivee,monte);
+        if(listeAppel_Dest.contains(ap)){
+            listeAppel_Dest.remove(ap);
+        }*/
     }
 
     /**
@@ -404,20 +410,43 @@ public class Immeuble extends JFrame implements Runnable{
     	for(int i = 0; i< listeAsc.size();i++){
             //Si l'ascenseur courant est vide
             if(listeAsc.get(i).getListePersonne().size()==0){
-                for(int j =0; j<listeAppel.size();j++){
-                    valTest = 0;
+                
+                valTest =1500*Immeuble.NBEtage;
+                for(int j =0; j<listeAppel_Dest.size();j++){
 
                     //On calcule la distance 
                     if(listeAppel.get(j).getNumEtage() > listeAsc.get(i).getEtageCourant())
-                        valTest = 1500 * (listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
-                    else
-                        valTest = 750 * (listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
-
+                        valTest = 1500 * (listeAppel_Dest.get(j).getSource().getNumEtage()- listeAsc.get(i).getEtageCourant());
+                    else if(listeAppel.get(j).getNumEtage() > listeAsc.get(i).getEtageCourant())
+                        valTest = 750 * (listeAppel_Dest.get(j).getSource().getNumEtage() - listeAsc.get(i).getEtageCourant());
+                    else{
+                        return listeAppel_Dest.get(j).getSource();
+                    }
                     if(valTest<val){//normalement avec cette condition un seul ascenseur prend la main pas de conflit
                         ascSelect = listeAsc.get(i);
-                        etageRenvoye = listeAppel.get(j);
+                        etageRenvoye = listeAppel_Dest.get(j).getSource();
                         val = valTest;
                     }
+                }
+            }else{//Sinon on a deja quelqun
+                for(int j =0; j<listeAppel_Dest.size();j++){
+                    valTest = 1500*Immeuble.NBEtage;
+
+                    //On calcule la distance
+                    if(listeAppel.get(j).getNumEtage() > listeAsc.get(i).getEtageCourant())
+                        valTest = 1500 * (listeAppel_Dest.get(j).getSource().getNumEtage()- listeAsc.get(i).getEtageCourant());
+                    else if(listeAppel.get(j).getNumEtage() > listeAsc.get(i).getEtageCourant())
+                        valTest = 750 * (listeAppel_Dest.get(j).getSource().getNumEtage() - listeAsc.get(i).getEtageCourant());
+                    else{
+                        valTest = 0;
+                    }
+                    
+                    if((asc.isMonte() && listeAppel_Dest.get(j).getMonte()) || (!asc.isMonte() && listeAppel_Dest.get(j).getMonte()))
+                        if(valTest<val){//normalement avec cette condition un seul ascenseur prend la main pas de conflit
+                        ascSelect = listeAsc.get(i);
+                        etageRenvoye = listeAppel_Dest.get(j).getSource();
+                        val = valTest;
+                        }
                 }
             }
     	}

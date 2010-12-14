@@ -26,6 +26,7 @@ public class Ascenseur extends JFrame implements Runnable {
     private int etageCourant = 0;
     private JPanel ascenseurPanel = new JPanel();
     private ArrayList<Personnes> listePersonne;
+    private ArrayList<Appel> listeAppels;
     private int nbPersonneMax;
     private int nbPersonneActuel;
     private int nbPlacesRestantes;
@@ -55,6 +56,7 @@ public class Ascenseur extends JFrame implements Runnable {
         nbPersonneActuel = 0;
         nbPersonneMax = 15;
         listePersonne = new ArrayList<Personnes>();
+        listeAppels = new ArrayList<Appel>();
     }
     
     /**
@@ -319,7 +321,9 @@ public class Ascenseur extends JFrame implements Runnable {
         if(Immeuble.getListeAppel().size() != 0)
         {
             Etage et = Etage.chercherEtageDsListe(this.getEtageCourant());
+            //Appel ap = chercherAppelDsListe(this.getEtageCourant());
             Immeuble.supprimerAppel(et);
+
         }
 
         try {
@@ -327,7 +331,7 @@ public class Ascenseur extends JFrame implements Runnable {
         } catch (InterruptedException e) {  
             e.printStackTrace();    }
     }
-    
+
     /**
      * ferme les portes de l'ascenseur
      */
@@ -384,6 +388,11 @@ public class Ascenseur extends JFrame implements Runnable {
     * @param P la personne a ajouté
     */
      public synchronized void ajouterPersonneAscenseur(Personnes P){
+        //Pour le Manager
+        Appel ap = new Appel(P.getEtageDepart(),P.getEtageArrive(),P.veutMonter());
+        listeAppels.add(ap);
+        
+        //Pour le simulateur
     	listePersonne.add(P);
         int nb = P.getTaille();
         this.setNbPersActuel(this.getNbPersActuel()+nb);
