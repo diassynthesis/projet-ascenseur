@@ -6,41 +6,51 @@ import projetAscenseur.*;
 import projetAscenseur.strategy.ComportementAbstrait;
 
 /**
- * comportement intelligent qui recupere les personnes en fonction de l'ordre d'appel 
+ * comportement intelligent qui recupere les personnes en fonction de l'ordre d'appel
  * @author Checconi maxime, Pilot guillaume et Canessa Marine
  */
-public class ComportementSupraIntelligent2 implements ComportementAbstrait{
-    
+public class ComportementOptimisationEnergie implements ComportementAbstrait{
+
     private Ascenseur asc;
-    
-    public ComportementSupraIntelligent2(){}
-    public ComportementSupraIntelligent2(Ascenseur asc)
+    private int parite =0;
+
+    public int getParite() {
+        return parite;
+    }
+
+    public void setParite(int parite) {
+        this.parite = parite;
+    }
+
+
+    public ComportementOptimisationEnergie(){}
+    public ComportementOptimisationEnergie(Ascenseur asc)
     {
         this.asc=asc;
     }
 
-    
+
     public void setAscenseur(Ascenseur asc){  this.asc = asc;  }
 
      /**
      * l'ascenseur se deplace dans les etages
      */
     public void seDeplacer()
-    {	
-    	
+    {
+
     	//Si il y a personne dans l'ascenseur
     	if(asc.getListePersonne().size()==0){
-            if(Immeuble.ascenseurLePlusProche(asc)!=null){
-                int etageAppelant = Immeuble.ascenseurLePlusProcheEnergiquement(asc).getNumEtage();
+            if(Immeuble.ascenseurLePlusProcheEnergiquement(asc)!=null){
+                int etageAppelant = Immeuble.ascenseurLePlusProche(asc).getNumEtage();
 
                 //L'ascenseur doit aller a cet etage
                 if(asc.getEtageCourant()<etageAppelant){
-                    asc.monter();	
+                    asc.monter();
                 }
                 else if(asc.getEtageCourant()>etageAppelant){
                     asc.descendre();
                 }
-                else if (asc.getEtageCourant()==etageAppelant && !Immeuble.ascenseurLePlusProcheEnergiquement(asc).getListePersonne().isEmpty()){
+                else if (asc.getEtageCourant()==etageAppelant && !Immeuble.ascenseurLePlusProche(asc).getListePersonne().isEmpty()){
 
                     // on arrive a l'etage de la personne on regle l'ascenseur en fonction de la personne
                     if(Immeuble.ascenseurLePlusProche(asc).getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
@@ -81,10 +91,10 @@ public class ComportementSupraIntelligent2 implements ComportementAbstrait{
             }
     	}
     }
-    
-    
+
+
     /**
-     * simule l'attente de l'ascenseur pendant que les personnes montent dedans ou en descendent 
+     * simule l'attente de l'ascenseur pendant que les personnes montent dedans ou en descendent
      * quand tout le monde est monté il ferme ses portes
      */
     public void attendre(){
@@ -110,7 +120,7 @@ public class ComportementSupraIntelligent2 implements ComportementAbstrait{
         }
         asc.fermerPorte();
     }
-    
+
     /**
      * indique si l'ascenseur accepte de prendre une personne ou pas
      * @return vrai si l'ascenseur accepte quelqu'un
@@ -132,7 +142,7 @@ public class ComportementSupraIntelligent2 implements ComportementAbstrait{
         }
         return value;
         }
-        
+
         /**
          * recherche si un ascenseur est deja là pour recuperer les gens
          * @return vrai ou faux
@@ -151,13 +161,12 @@ public class ComportementSupraIntelligent2 implements ComportementAbstrait{
     }
 
     public String getName() {
-        return "Supra Intelligent II";
+        return "Optimisation d'énergie";
     }
 
     public Class getType() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public int getParite(){return -1;}
-  
+
 }
