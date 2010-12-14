@@ -132,6 +132,7 @@ public class Manager extends JFrame {
             enregistrement.setVisible(false);
 
 
+
         } catch (MalformedURLException ex) {
             Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
         }

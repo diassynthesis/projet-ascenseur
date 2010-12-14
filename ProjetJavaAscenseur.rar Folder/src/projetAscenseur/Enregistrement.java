@@ -109,6 +109,16 @@ public class Enregistrement extends javax.swing.JFrame {
         }
     }
 
+
+    public void setVisible(boolean affi){
+        this.initValues();
+        super.setVisible(affi);
+    }
+
+
+    private void initValues(){
+        
+    }
     /**
      * @return On renvoit toujours la même instance de Enregistrement
      */
