@@ -31,7 +31,7 @@ public class ComportementSupraIntelligent2 implements ComportementAbstrait{
     	//Si il y a personne dans l'ascenseur
     	if(asc.getListePersonne().size()==0){
             if(Immeuble.ascenseurLePlusProche(asc)!=null){
-                int etageAppelant = Immeuble.ascenseurLePlusProcheEnergiquement(asc).getNumEtage();
+                int etageAppelant = Immeuble.ascenseurLePlusProche(asc).getNumEtage();
 
                 //L'ascenseur doit aller a cet etage
                 if(asc.getEtageCourant()<etageAppelant){
@@ -40,7 +40,7 @@ public class ComportementSupraIntelligent2 implements ComportementAbstrait{
                 else if(asc.getEtageCourant()>etageAppelant){
                     asc.descendre();
                 }
-                else if (asc.getEtageCourant()==etageAppelant && !Immeuble.ascenseurLePlusProcheEnergiquement(asc).getListePersonne().isEmpty()){
+                else if (asc.getEtageCourant()==etageAppelant && !Immeuble.ascenseurLePlusProche(asc).getListePersonne().isEmpty()){
 
                     // on arrive a l'etage de la personne on regle l'ascenseur en fonction de la personne
                     if(Immeuble.ascenseurLePlusProche(asc).getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
