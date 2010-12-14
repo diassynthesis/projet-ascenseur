@@ -309,13 +309,14 @@ public class Enregistrement extends javax.swing.JFrame {
         }
         }*/
 
-        ArrayList valeurs = (ArrayList) HashConfigNuitWeekEnd.values();
         int sum = 0;
-
-        //On effectue la somme des valeurs du tableaux
-        //Elles doivent être égale à 100%
-        for (int i = 0; i < valeurs.size(); i++) {
-            sum = sum + (Integer) valeurs.get(i);
+        int element = 0;
+        Collection collection = HashConfigNuitWeekEnd.values();
+        Iterator iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            element = (Integer)iterator.next();
+            sum = sum + element;
+        // Do something with element
         }
         if (sum == 100) {
             return true;
@@ -339,10 +340,9 @@ public class Enregistrement extends javax.swing.JFrame {
     }
 
     /**
-     * @Override
+     * @sauvegarde
      */
-    @Override
-    public void finalize() {
+    public void sauvegarde() {
         System.out.println("Destructeur");
         try {
             XMLEncoder encoderConf = new XMLEncoder(new FileOutputStream(ConfFile));
