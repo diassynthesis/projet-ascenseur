@@ -63,6 +63,7 @@ public class FichierConfiguration implements Serializable{
         paramsJournee.put("cinqDerniersEtages", new Integer(1200));
         paramsJournee.put("sousSols", new Integer(99));
         paramsJournee.put("autresEtages", new Integer(-19));
+
         return true;
     }
 

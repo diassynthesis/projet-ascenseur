@@ -130,7 +130,7 @@ public class Manager extends JFrame {
             //init fenetre de variables
             enregistrement = new Enregistrement();
             enregistrement.setVisible(false);
-
+ 
 
 
         } catch (MalformedURLException ex) {
