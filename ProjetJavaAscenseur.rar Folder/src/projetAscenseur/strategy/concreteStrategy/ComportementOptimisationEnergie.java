@@ -40,9 +40,10 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
 
     	//Si il y a personne dans l'ascenseur
     	if(asc.getListePersonne().size()==0){
+            System.out.println("Je teste si je peux etre sélectionné : " + asc.getNumAscenseur());
             if(Immeuble.ascenseurLePlusProcheEnergiquement(asc)!=null){
-                int etageAppelant = Immeuble.ascenseurLePlusProche(asc).getNumEtage();
-
+                int etageAppelant = Immeuble.ascenseurLePlusProcheEnergiquement(asc).getNumEtage();
+                System.out.println("L'ascenseur est sélectionné : " + asc.getNumAscenseur());
                 //L'ascenseur doit aller a cet etage
                 if(asc.getEtageCourant()<etageAppelant){
                     asc.monter();
@@ -50,7 +51,7 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
                 else if(asc.getEtageCourant()>etageAppelant){
                     asc.descendre();
                 }
-                else if (asc.getEtageCourant()==etageAppelant && !Immeuble.ascenseurLePlusProche(asc).getListePersonne().isEmpty()){
+                else if (asc.getEtageCourant()==etageAppelant && !Immeuble.ascenseurLePlusProcheEnergiquement(asc).getListePersonne().isEmpty()){
 
                     // on arrive a l'etage de la personne on regle l'ascenseur en fonction de la personne
                     if(Immeuble.ascenseurLePlusProche(asc).getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
