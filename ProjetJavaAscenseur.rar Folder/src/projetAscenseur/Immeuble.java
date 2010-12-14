@@ -258,10 +258,15 @@ public class Immeuble extends JFrame implements Runnable{
      * ajoute un appel a la liste d'appel
      * @param etage l'etage appelant
      */
-    public static void ajouterAppel(Etage etage){
-    	listeAppel.add(etage);
-        etage.setBoutonAscenseur(true);
-        etage.updateJLabelBouton();
+    public static void ajouterAppel(Etage etageDepart,Etage etageArrivee,boolean monte){
+
+        //On passe en mode appel pour le manager
+        Appel ap = new Appel(etageDepart,etageArrivee,monte);
+        listeAppel_Dest.add(ap);
+        //Pour le simulateur
+    	listeAppel.add(etageDepart);
+        etageDepart.setBoutonAscenseur(true);
+        etageDepart.updateJLabelBouton();
     }
     
     /**
@@ -365,9 +370,9 @@ public class Immeuble extends JFrame implements Runnable{
         
         ArrayList<Ascenseur> listeAsc = getListeAscenseur();
     	//ArrayList<Etage> etageAppelant = getListeAppel();
-    	int val = Immeuble.NBEtage; //le nombre max d'etage
+    	int val = 1500*Immeuble.NBEtage; //le nombre max d'etage
     	Ascenseur ascSelect = asc;
-    	int valTest = Immeuble.NBEtage;
+    	int valTest = 1500*Immeuble.NBEtage;
     	Etage etageRenvoye = null;
     	//pour chaque ascenseur on va tester si c lui le plus proche
     	for(int i = 0; i< listeAsc.size();i++){
@@ -375,10 +380,12 @@ public class Immeuble extends JFrame implements Runnable{
             if(listeAsc.get(i).getListePersonne().size()==0){
                 for(int j =0; j<listeAppel.size();j++){
                     valTest = 0;
+
+                    //On calcule la distance 
                     if(listeAppel.get(j).getNumEtage() > listeAsc.get(i).getEtageCourant())
-                        valTest = 750 * (listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
-                    else
                         valTest = 1500 * (listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
+                    else
+                        valTest = 750 * (listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
 
                     if(valTest<val){//normalement avec cette condition un seul ascenseur prend la main pas de conflit
                         ascSelect = listeAsc.get(i);
