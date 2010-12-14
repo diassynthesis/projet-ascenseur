@@ -133,5 +133,5 @@ public class ComportementArretEtage implements ComportementAbstrait{
         throw new UnsupportedOperationException("Not supported yet.");
     }
   
-  
+    public int getParite(){return -1;}
 }

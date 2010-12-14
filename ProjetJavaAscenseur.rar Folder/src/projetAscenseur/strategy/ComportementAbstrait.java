@@ -20,5 +20,7 @@ public interface ComportementAbstrait extends Plugin {
     public boolean ascenseurDejaLa();
     
     public void setAscenseur(Ascenseur asc);
+
+    public int getParite();
     
 }
