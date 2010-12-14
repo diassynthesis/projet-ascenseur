@@ -262,7 +262,7 @@ public class Immeuble extends JFrame implements Runnable{
 
         //On passe en mode appel pour le manager
         Appel ap = new Appel(etageDepart,etageArrivee,monte);
-        listeAppel_Dest.add(ap);
+        //listeAppel_Dest.add(ap);
         //Pour le simulateur
     	listeAppel.add(etageDepart);
         etageDepart.setBoutonAscenseur(true);
