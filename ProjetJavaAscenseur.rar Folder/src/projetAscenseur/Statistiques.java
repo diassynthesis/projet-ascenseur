@@ -24,11 +24,7 @@ public class Statistiques implements Serializable{
         this.HashStatistiques = HashStatistiques;
     }
 
-    private java.util.Date uDate = new java.util.Date();
-    private java.sql.Date sDate = new java.sql.Date(System.currentTimeMillis());
     public Statistiques(){
-        System.out.println(uDate);
-        System.out.println(sDate);
     }
 
     /**
