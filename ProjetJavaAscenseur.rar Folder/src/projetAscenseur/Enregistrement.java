@@ -268,25 +268,14 @@ public class Enregistrement extends javax.swing.JFrame {
      */
     public boolean verifyConfigJournee(HashMap HashConfigJournee) {
 
-        /* Set cles = HashConfigJournee.keySet();
-        Iterator it = cles.iterator();
-        while (it.hasNext()){
-        Object cle = it.next(); // tu peux typer plus finement ici
-        Object valeur = HashConfigJournee.get(cle); // tu peux typer plus finement ici
-        if(valeur > 100){
-        HashConfigJournee.put(cle, 100)
-        }elseif(valeur < 100){
-        HashConfigJournee.put(cle, 0)
-        }
-        }*/
-
-        ArrayList valeurs = (ArrayList) HashConfigJournee.values();
-        int sum = 0;
-
-        //On effectue la somme des valeurs du tableaux
-        //Elles doivent être égale à 100%
-        for (int i = 0; i < valeurs.size(); i++) {
-            sum = sum + (Integer) valeurs.get(i);
+        Integer sum = 0;
+        Integer element = 0;
+        Collection collection = HashConfigJournee.values();
+        Iterator iterator = collection.iterator();
+        while (iterator.hasNext()) {
+            element = Integer.parseInt(iterator.next().toString());
+            sum = sum + element;
+        // Do something with element
         }
         if (sum == 100) {
             return true;
@@ -309,12 +298,12 @@ public class Enregistrement extends javax.swing.JFrame {
         }
         }*/
 
-        int sum = 0;
-        int element = 0;
+        Integer sum = 0;
+        Integer element = 0;
         Collection collection = HashConfigNuitWeekEnd.values();
         Iterator iterator = collection.iterator();
         while (iterator.hasNext()) {
-            element = (Integer)iterator.next();
+           element = Integer.parseInt(iterator.next().toString());
             sum = sum + element;
         // Do something with element
         }
