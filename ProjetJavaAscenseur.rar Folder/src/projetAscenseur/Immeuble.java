@@ -147,19 +147,45 @@ public class Immeuble extends JFrame implements Runnable{
 
 
     }*/
-/*
-    public static Etage AscLePlusProcheTemporellement(asc)
+
+    public static Etage AscLePlusProcheTemporellement(Ascenseur asc)
     {
-        Etage retour;
+        ArrayList<Ascenseur> listeAsc = getListeAscenseur();
+    	//ArrayList<Etage> etageAppelant = getListeAppel();
+    	int val = Immeuble.NBEtage; //le nombre max d'etage
+    	Ascenseur ascSelect = asc;
+    	int valTest = Immeuble.NBEtage;
+    	Etage etageRenvoye = null;
+    	//pour chaque ascenseur on va tester si c lui le plus proche
+    	for(int i = 0; i< listeAsc.size();i++){                                 //On parcours tout les ascenseurs
+            if(listeAsc.get(i).getListePersonne().size()==0){                   //On test si ils sont vide
+                for(int j =0; j<listeAppel.size();j++){
+                    //A traiter a partir d'ici todo
+                    
+                    if(estInterrompable(asc, listeAppel_Dest.get(j).getDest()))     //Test pour savoir si l'ascenseur à le droit de s'arreter
+                    {
+                        //Test à faire pour savoir si la personne va dans le meme sens que l'ascenseur
 
-        listeAppel_Dest( this.getListeAppel() );
+                        valTest = Math.abs(listeAppel_Dest.get(j).getDest().getNumEtage() - listeAsc.get(i).getEtageCourant());
 
+                        if(valTest<val){//normalement avec cette condition un seul ascenseur prend la main pas de conflit
+                            ascSelect = listeAsc.get(i);
+                            etageRenvoye = listeAppel.get(j);
+                            val = valTest;
+                        }
 
+                    }
+                    // Sinon rien car ce n'est pas a lui de s'arreter donc pas de else
 
-
-        listeAppel
-
-        return retour;
+                      
+                    //Fin traitement todo
+                }
+            }
+    	}
+    	if(ascSelect == asc){
+    		return etageRenvoye;
+    	}
+    	return null;
     }
 
 
@@ -401,12 +427,17 @@ public class Immeuble extends JFrame implements Runnable{
     	return null;
     }
 
-    public boolean estInterrompable(Ascenseur asc,Appel ap){
+    public static boolean estInterrompable(Ascenseur asc, Etage dest){  //Appel ap){
 
-        if( ap.getDest().getNumEtage() % asc.getComportement().getParite() == 0)
+        if( /*ap.getDest()*/dest.getNumEtage() % 2 == asc.getComportement().getParite())
+        {
             return true;
+        }   
         else
+        {
             return false;
+        }
+            
 
     }
     

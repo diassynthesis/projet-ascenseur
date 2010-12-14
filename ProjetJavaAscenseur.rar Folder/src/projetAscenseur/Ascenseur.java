@@ -37,6 +37,14 @@ public class Ascenseur extends JFrame implements Runnable {
     private Immeuble immeuble;
     private int temporisation;
     private boolean maintenance = false;
+
+
+    // Rajout de la parite et de l'étage par defaut
+
+    private int parite;             //todo // mode de fonctionnement pair si vaut 0 et impair si vaut 1
+    private Etage EtageDefaut;      //todo
+
+
     
     //****************************CONSTRUCTEURS**********************************
     /**
