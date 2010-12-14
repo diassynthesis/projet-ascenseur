@@ -37,7 +37,7 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
 
                 if(asc.getEtageCourant()% 2 == parite)
                 {
-                    if(asc.quelqunVeutDessendreDeAsc()!=null ||( (Immeuble.getListeAppel()).contains(asc.getEtageCourant()) &&  ))
+                    if(asc.quelqunVeutDessendreDeAsc()!=null ||( (Immeuble.getListeAppel()).contains(asc.getEtageCourant())   ))
                     {
             		attendre();
                     }
