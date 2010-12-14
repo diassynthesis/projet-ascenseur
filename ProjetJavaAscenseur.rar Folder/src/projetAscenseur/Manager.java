@@ -115,7 +115,7 @@ public class Manager extends JFrame {
 
     //******************************METHODES*********************************
     public Manager(Simulateur sim) {
-        super("Interface du Manager");
+         super("Interface du Manager");
         simulateur = sim;
 
         try {
