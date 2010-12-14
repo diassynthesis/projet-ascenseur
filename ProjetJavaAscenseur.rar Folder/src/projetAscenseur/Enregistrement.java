@@ -351,7 +351,8 @@ public class Enregistrement extends javax.swing.JFrame {
             //On intilialise l'objet            
             //On ecrit l'objet dans le fichier
             encoderConf.writeObject(ClassFichierConfiguration);
-            stats.addStatistiques(new java.util.Date(), new Ascenseur(), 5);
+            stats.addStatistiques(new java.util.Date(), 1, 5);
+            
             encoderStats.writeObject(stats);
 
             //On vide les buffers
