@@ -58,11 +58,11 @@ public class FichierConfiguration implements Serializable{
         //Initialisation
         paramsJournee = new HashMap();
         //Insertion des valeurs par défaut dans le HASH
-        paramsJournee.put("RdC", new Integer(3434));
-        paramsJournee.put("vingtPremiersEtages", new Integer(123));
-        paramsJournee.put("cinqDerniersEtages", new Integer(1200));
-        paramsJournee.put("sousSols", new Integer(99));
-        paramsJournee.put("autresEtages", new Integer(-19));
+        paramsJournee.put("RdC", new Integer(25));
+        paramsJournee.put("vingtPremiersEtages", new Integer(25));
+        paramsJournee.put("cinqDerniersEtages", new Integer(10));
+        paramsJournee.put("sousSols", new Integer(10));
+        paramsJournee.put("autresEtages", new Integer(30));
 
         return true;
     }
@@ -75,19 +75,19 @@ public class FichierConfiguration implements Serializable{
         //Initialisation
         paramsNuitWeekEnd = new HashMap();
         //Insertion des valeurs par défaut dans le HASH
-        paramsNuitWeekEnd.put("RdC", new Integer(3434));
-        paramsNuitWeekEnd.put("vingtPremiersEtages", new Integer(123));
-        paramsNuitWeekEnd.put("cinqDerniersEtages", new Integer(1200));
-        paramsNuitWeekEnd.put("sousSols", new Integer(99));
-        paramsNuitWeekEnd.put("autresEtages", new Integer(-19));
+        paramsNuitWeekEnd.put("RdC", new Integer(25));
+        paramsNuitWeekEnd.put("vingtPremiersEtages", new Integer(25));
+        paramsNuitWeekEnd.put("cinqDerniersEtages", new Integer(10));
+        paramsNuitWeekEnd.put("sousSols", new Integer(20));
+        paramsNuitWeekEnd.put("autresEtages", new Integer(20));
         return true;
     }
 
      public boolean setDefaultLogin(){
 
         //Insertion des valeurs par défaut dans le HASH
-        paramsNuitWeekEnd.put("Login", new String("admin"));
-        paramsNuitWeekEnd.put("mdp", new String("123123"));
+        paramsLogin.put("Login", new String("admin"));
+        paramsLogin.put("mdp", new String("123123"));
         return true;
     }
 

@@ -126,11 +126,11 @@ public class Enregistrement extends javax.swing.JFrame {
         String sousSols = configJ.get(new String("sousSols")).toString();
         String autresEtages = configJ.get(new String("autresEtages")).toString();
         //on parcour le hashmap de nuit week
-        String RdCN = configJ.get(new String("RdC")).toString();
-        String vingtPremiersEtagesN = configJ.get(new String("vingtPremiersEtages")).toString();
-        String cinqDerniersEtagesN = configJ.get(new String("cinqDerniersEtages")).toString();
-        String sousSolsN = configJ.get(new String("sousSols")).toString();
-        String autresEtagesN = configJ.get(new String("autresEtages")).toString();
+        String RdCN = configN.get(new String("RdC")).toString();
+        String vingtPremiersEtagesN = configN.get(new String("vingtPremiersEtages")).toString();
+        String cinqDerniersEtagesN = configN.get(new String("cinqDerniersEtages")).toString();
+        String sousSolsN = configN.get(new String("sousSols")).toString();
+        String autresEtagesN = configN.get(new String("autresEtages")).toString();
 
         //on met les valeurs de la journée dans l'interface
         jTextField20Prem.setText(vingtPremiersEtages);
@@ -236,7 +236,7 @@ public class Enregistrement extends javax.swing.JFrame {
             //On vérifie que les données sont cohérentes
             if (this.verifyConfigJournee(HashConfigJournee)) {
                 ClassFichierConfiguration.setParamsJournee(HashConfigJournee);
-
+                sauvegarde();
             } else {
                 return false;
             }
@@ -251,7 +251,7 @@ public class Enregistrement extends javax.swing.JFrame {
             //On vérifie que les données sont cohérentes
             if (this.verifyConfigNuitWeekEnd(HashConfigNuitWeekEnd)) {
                 ClassFichierConfiguration.setParamsNuitWeekEnd(HashConfigNuitWeekEnd);
-
+                sauvegarde();
             } else {
                 return false;
             }
@@ -280,36 +280,26 @@ public class Enregistrement extends javax.swing.JFrame {
         if (sum == 100) {
             return true;
         } else {
+            System.out.println("Somme fausse");
             return false;
         }
     }
 
     public boolean verifyConfigNuitWeekEnd(HashMap HashConfigNuitWeekEnd) {
 
-        /* Set cles = HashConfigJournee.keySet();
-        Iterator it = cles.iterator();
-        while (it.hasNext()){
-        Object cle = it.next(); // tu peux typer plus finement ici
-        Object valeur = HashConfigJournee.get(cle); // tu peux typer plus finement ici
-        if(valeur > 100){
-        HashConfigJournee.put(cle, 100)
-        }elseif(valeur < 100){
-        HashConfigJournee.put(cle, 0)
-        }
-        }*/
-
         Integer sum = 0;
         Integer element = 0;
         Collection collection = HashConfigNuitWeekEnd.values();
         Iterator iterator = collection.iterator();
         while (iterator.hasNext()) {
-           element = Integer.parseInt(iterator.next().toString());
+            element = Integer.parseInt(iterator.next().toString());
             sum = sum + element;
         // Do something with element
         }
         if (sum == 100) {
             return true;
         } else {
+            System.out.println("Somme fausse");
             return false;
         }
     }
@@ -332,7 +322,7 @@ public class Enregistrement extends javax.swing.JFrame {
      * @sauvegarde
      */
     public void sauvegarde() {
-        System.out.println("Destructeur");
+        System.out.println("Sauvegarde");
         try {
             XMLEncoder encoderConf = new XMLEncoder(new FileOutputStream(ConfFile));
             XMLEncoder encoderStats = new XMLEncoder(new FileOutputStream(StatsFile));
@@ -341,7 +331,7 @@ public class Enregistrement extends javax.swing.JFrame {
             //On ecrit l'objet dans le fichier
             encoderConf.writeObject(ClassFichierConfiguration);
             stats.addStatistiques(new java.util.Date(), 1, 5);
-            
+            encoderConf.flush();
             encoderStats.writeObject(stats);
 
             //On vide les buffers
