@@ -31,7 +31,7 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
      */
     public void seDeplacer()
     {
-        if(!asc.getMaintenance())                            // Si l'ascenseur n'est pas en maintenance
+        /*if(!asc.getMaintenance())                            // Si l'ascenseur n'est pas en maintenance
         {
 
             if( Immeuble.AscLePlusProcheTemporellement(asc) != null)            // Si il existe un étage pour la prochaine étape
@@ -76,7 +76,7 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
             asc.fermerPorte();
 
         }
-
+*/
     }
 
 
@@ -147,4 +147,5 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
     public Class getType() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    public int getParite(){return -1;}
 }

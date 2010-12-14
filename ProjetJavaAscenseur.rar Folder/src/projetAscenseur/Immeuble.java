@@ -360,9 +360,6 @@ public class Immeuble extends JFrame implements Runnable{
      */
     public static Etage ascenseurLePlusProcheEnergiquement(Ascenseur asc){
 
-        //Est-il interrompable ?
-        //On établit la liste des étages qui peuvent l'interompre
-
         //Etage d'appel est-il supérieur ?
 
         
@@ -377,10 +374,11 @@ public class Immeuble extends JFrame implements Runnable{
             //Si l'ascenseur courant est vide
             if(listeAsc.get(i).getListePersonne().size()==0){
                 for(int j =0; j<listeAppel.size();j++){
-
-                    int distanceEnergetique = 0;
-                    //valTest = Math.abs(listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
-                    
+                    valTest = 0;
+                    if(listeAppel.get(j).getNumEtage() > listeAsc.get(i).getEtageCourant())
+                        valTest = 750 * (listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
+                    else
+                        valTest = 1500 * (listeAppel.get(j).getNumEtage() - listeAsc.get(i).getEtageCourant());
 
                     if(valTest<val){//normalement avec cette condition un seul ascenseur prend la main pas de conflit
                         ascSelect = listeAsc.get(i);
