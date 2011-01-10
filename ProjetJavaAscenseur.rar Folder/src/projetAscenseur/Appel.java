@@ -82,15 +82,7 @@ public class Appel extends JLabel{
         return listeAppel;
     }
 
-    public Ascenseur getAsc() {
-        return asc;
-    }
 
-    public void setAsc(Ascenseur asc) {
-        this.asc = asc;
-    }
-
-    
     //************************METHODES****************************
 
 
@@ -116,5 +108,40 @@ public class Appel extends JLabel{
           
         }
     }
+
+   public Ascenseur getAsc() {
+        return asc;
+    }
+
+    public void setAsc(Ascenseur asc) {
+        this.asc = asc;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Appel other = (Appel) obj;
+        if (this.source != other.source && (this.source == null || !this.source.equals(other.source))) {
+            return false;
+        }
+        if (this.dest != other.dest && (this.dest == null || !this.dest.equals(other.dest))) {
+            return false;
+        }
+        if (this.monte != other.monte) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+
+
 
 }
