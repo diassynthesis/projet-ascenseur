@@ -11,6 +11,7 @@ import java.lang.System;
 import java.net.URL;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 import projetAscenseur.personne.concretePersonne.Groupe;
 /**
@@ -22,7 +23,7 @@ public class Ascenseur extends JFrame implements Runnable {
     
     //***********************ATTRIBUTS**************************************
     private Dimension dimension;
-    private int numAscenseur;
+    private int numAscenseur=0;
     private int etageCourant = 0;
     private JPanel ascenseurPanel = new JPanel();
     private ArrayList<Personnes> listePersonne;
@@ -68,6 +69,7 @@ public class Ascenseur extends JFrame implements Runnable {
     public Ascenseur(int nbPersonneMax, int numAscenseur, ComportementAbstrait comportement){
         super("Ascenseur");
         this.numAscenseur = numAscenseur;
+        System.out.print(numAscenseur+" ");
         setTemporisation(500);
         nbPersonneActuel = 0;
         setComportement(comportement);
@@ -284,6 +286,10 @@ public class Ascenseur extends JFrame implements Runnable {
             Manager mana = this.immeuble.getManager();
             mana.setValuesAsc(this.numAscenseur, this.etageCourant, 1500);
 
+            // enregistrement du deplacement
+            Date maDate = new Date();
+            mana.saveStatistique(maDate, new Integer(this.numAscenseur), new Integer(1));
+
         }
     }
 
@@ -302,6 +308,10 @@ public class Ascenseur extends JFrame implements Runnable {
             this.setEtageCourant(value);
             Manager mana = this.immeuble.getManager();
             mana.setValuesAsc(this.numAscenseur, this.etageCourant, 750);
+            
+            // enregistrement du deplacement
+            Date maDate = new Date();
+            mana.saveStatistique(maDate, new Integer(this.numAscenseur), new Integer(-1));
         }
     }
     

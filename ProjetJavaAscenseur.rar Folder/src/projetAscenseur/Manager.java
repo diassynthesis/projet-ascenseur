@@ -25,7 +25,8 @@ import projetAscenseur.strategy.ComportementAbstrait;
 import fr.unice.plugin.Plugin;
 import fr.unice.plugin.PluginLoader;
 //import de la classe qui gere l'édition des variables!
-import projetAscenseur.Enregistrement;
+import java.util.Date;
+import projetAscenseur.EnregistrementConf;
 
 /**
  * classe representant l'interface graphique de la simulation
@@ -36,7 +37,8 @@ public class Manager extends JFrame {
     //********************ATTRIBUTS*****************************
     private Simulateur simulateur;
     private static boolean enCreation = true;
-    private Enregistrement enregistrement = null;
+    private EnregistrementConf enregistrementConf = null;
+    private EnregistrementStat enregistrementStat = null;
     //***INTERFACE******//
     // Variables declaration - do not modify
     private javax.swing.JButton jButtonDemarrerGene;
@@ -127,9 +129,10 @@ public class Manager extends JFrame {
             initManager();
             this.setVisible(true);
             //init fenetre de variables
-            enregistrement = new Enregistrement();
-            enregistrement.setVisible(false);
- 
+            enregistrementConf = new EnregistrementConf();
+            enregistrementStat = new EnregistrementStat();
+            enregistrementConf.setVisible(false);
+            enregistrementStat.setVisible(false);
 
 
         } catch (MalformedURLException ex) {
@@ -513,18 +516,23 @@ public class Manager extends JFrame {
         jMenuStatistiques.setText("Statistiques");
 
         jMenuItemConso.setText("Consommation");
-        jMenuItemConso.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+        
 
-            public void vetoableChange(java.beans.PropertyChangeEvent evt) throws java.beans.PropertyVetoException {
-                jMenuItemConsoVetoableChange(evt);
+        jMenuItemConso.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemConsoActionPerformed(evt);
             }
         });
+
         jMenuStatistiques.add(jMenuItemConso);
 
         jMenuItemTmoyen.setText("Temps moyen");
         jMenuStatistiques.add(jMenuItemTmoyen);
 
         jMenuBar1.add(jMenuStatistiques);
+
+      
 
         setJMenuBar(jMenuBar1);
 
@@ -542,7 +550,7 @@ public class Manager extends JFrame {
     }// </editor-fold>
 
     private void jMenuItemAlgorithmeActionPerformed(java.awt.event.ActionEvent evt) {
-        enregistrement.setVisible(true);
+        enregistrementConf.setVisible(true);
     }
 
     private void jButtonMaintenance4ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -601,8 +609,10 @@ public class Manager extends JFrame {
         jButtonMaintenanceActionPerformed(4);
     }
 
-    private void jMenuItemConsoVetoableChange(java.beans.PropertyChangeEvent evt) throws java.beans.PropertyVetoException {
-        // TODO add your handling code here:
+
+    private void jMenuItemConsoActionPerformed(java.awt.event.ActionEvent evt)  {
+        //this.enregistrementStat.initChart();
+        enregistrementStat.setVisible(true);
     }
 
     private void jButtonMaintenanceGeneActionPerformed(java.awt.event.ActionEvent evt) {
@@ -837,5 +847,15 @@ public class Manager extends JFrame {
                 break;
         }
     }
+
+    //+1 monte -1 descent
+    public void saveStatistique(Date date, Integer numAsc, Integer direction){
+        System.out.print(date.toString()+" -- "+numAsc.toString()+" -- "+direction.toString());
+        this.enregistrementStat.addStatistiques(date, numAsc, direction);
+        this.enregistrementStat.initChart();
+        //enregistrementStat.setVisible(true);
+    }
+
+
 }//fin de la classe
 

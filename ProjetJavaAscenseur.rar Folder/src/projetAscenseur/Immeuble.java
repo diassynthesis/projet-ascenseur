@@ -264,8 +264,9 @@ public class Immeuble extends JFrame implements Runnable{
         //on cree les etages
         listeEtage = new ArrayList<Etage>();
         for(int i = NBEtage-1; i>=0;i--)
-        {           
-            Etage ei = new Etage(dimension.width,tailleEtage,i,new Color(200-i*10,200-i*10,200-i*10));
+        {
+            int j = i % 2;
+            Etage ei = new Etage(dimension.width,tailleEtage,i,new Color(200-j*10,200-j*10,200-j*10));
             listeEtage.add(ei);
             immeublePanel.add(ei);
         }
