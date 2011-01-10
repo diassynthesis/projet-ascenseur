@@ -39,7 +39,7 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
     {
 
     	//Si il y a personne dans l'ascenseur
-    	if(asc.getListePersonne().size()==0){
+    	 if(asc.getListePersonne().size()==0){
             System.out.println("Je teste si je peux etre sélectionné : " + asc.getNumAscenseur());
             if(Immeuble.ascenseurLePlusProcheEnergiquement(asc)!=null){
                 int etageAppelant = Immeuble.ascenseurLePlusProcheEnergiquement(asc).getNumEtage();
