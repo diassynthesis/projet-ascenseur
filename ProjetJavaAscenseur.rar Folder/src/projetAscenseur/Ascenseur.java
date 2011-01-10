@@ -98,6 +98,8 @@ public class Ascenseur extends JFrame implements Runnable {
     
     public ArrayList<Personnes> getListePersonne(){return listePersonne;}
     
+    public ArrayList<Appel> getListeAppels(){return listeAppels;}
+
     public int getNbPersonne(){return listePersonne.size();}
     
     public int getEtageCourant(){return etageCourant;}
@@ -163,6 +165,7 @@ public class Ascenseur extends JFrame implements Runnable {
     public void initAscenseur(){
     	
     	listePersonne = new ArrayList<Personnes>();
+        listeAppels = new ArrayList<Appel>();
         dimension = new Dimension(100, Math.round(Immeuble.getTailleEtage()));
         ascenseurPanel.setBackground(Color.BLACK);
         ascenseurPanel.setPreferredSize(dimension);
@@ -399,9 +402,26 @@ public class Ascenseur extends JFrame implements Runnable {
     */
      public synchronized void ajouterPersonneAscenseur(Personnes P){
         //Pour le Manager
-        Appel ap = new Appel(P.getEtageDepart(),P.getEtageArrive(),P.veutMonter());
-        listeAppels.add(ap);
-        
+        Appel ap = new Appel(P.getEtageDepart(), P.getEtageArrive(), P.veutMonter(),this);
+
+        for (int j = immeuble.getListeAppel_Attente().size()-1;j>=0; j--){
+                        //System.out.println("On cherche un objet dans AppelDest");
+                        if(immeuble.getListeAppel_Attente().get(j).equals(ap)  && !listeAppels.contains(immeuble.getListeAppel_Attente().get(j).equals(ap)))
+                            ap = immeuble.getListeAppel_Attente().get(j);
+
+        }
+
+        if(ap !=null){
+            //immeuble.getListeAppels_Dest().remove(ap);
+            immeuble.getListeAppel_Attente().remove(ap);
+            ap.setAsc(this);
+            immeuble.getListeAppels_Dest().add(ap);
+            System.out.println("Je viens de  "+ P.getEtageDepart().getNumEtage() + " je vais : " + P.getEtageArrive().getNumEtage() );
+
+            listeAppels.add(ap);
+        }
+
+
         //Pour le simulateur
     	listePersonne.add(P);
         int nb = P.getTaille();
@@ -420,6 +440,7 @@ public class Ascenseur extends JFrame implements Runnable {
      */
     public synchronized void supprimerPersonneAscenseur(Personnes P){
         if(listePersonne.contains(P)){
+            supprimerAppel(P);
             listePersonne.remove(P);
             int nb = P.getTaille();
             this.setNbPersActuel(this.getNbPersActuel()-nb);
@@ -432,7 +453,33 @@ public class Ascenseur extends JFrame implements Runnable {
         }
     }
 
+     public synchronized void supprimerAppel(Personnes P){
+            for(int i = 0;i<= listeAppels.size()-1;i++){
+                if(listeAppels.get(i).getDest().getNumEtage() == this.getEtageCourant()){
+                    //System.out.println("tentative de suppresion | taille actuelle : " + listeAppels.size());
+                    Appel appel = null;
+                     //System.out.println("Hash de Appel supprimé " + listeAppels.get(i).hashCode()+"valeur de i " +i );
+                    appel = listeAppels.remove(i);
+                    if(appel == null)
+                        System.out.println("Appel null lors de la suppresion");
+                    Appel ap = null;
+                    //Suppression dans immeuble de l'appel supprimé de la liste d'appel de l'asc
+                    for (int j = 0;j< immeuble.getListeAppels_Dest().size(); j++){
+                        // System.out.println("j : " +immeuble.getListeAppels_Dest().get(j).hashCode() +"-"+ appel.hashCode());
+                        if(appel.hashCode()== immeuble.getListeAppels_Dest().get(j).hashCode()){
+                            System.out.println("Hash supprimé  :"+ immeuble.getListeAppels_Dest().get(j).hashCode() + "Nouvelle taille" +immeuble.getListeAppels_Dest().size() );
+                            ap = (immeuble.getListeAppels_Dest()).remove(j);
+                        }
+                        if(immeuble.getListeAppels_Dest().isEmpty())
+                            System.out.println("Appels vide");
+                        if(immeuble.getListeAppel_Attente().isEmpty())
+                            System.out.println("AppelsAttente vide");
 
+                    }
+
+                }
+            }
+    }
     /**
      * supprime les personnes presentes dans l'ascenseur lors du rafraichissement
      */

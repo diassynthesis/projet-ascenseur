@@ -40,7 +40,7 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
             }
             else
             {
-               NextHop = EtageDefaut.getNumEtage();
+               //NextHop = EtageDefaut.getNumEtage();
             }
 
             //L'ascenseur réagit en fonction du NextHop
