@@ -207,7 +207,7 @@ public class Ascenseur extends JFrame implements Runnable {
     public void run(){
         while(true){
             //tant qu'il y aura des personnes en mouvement 
-            while(Immeuble.getListeAppel().size() > 0 || nbPersonneActuel > 0){
+            while(Immeuble.getListeAppel_Attente().size() > 0 || nbPersonneActuel > 0){
                     comportement.seDeplacer();
                 try {
                     validate(); repaint();
