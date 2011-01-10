@@ -42,11 +42,12 @@ public class Appel extends JLabel{
 
     }
 
-    public Appel(Etage src, Etage dst, boolean monte)
+    public Appel(Etage src, Etage dst, boolean monte,Ascenseur asc)
     {
         this.source=src;
         this.dest=dst;
         this.monte=monte;
+        this.asc = asc;
 
     }
 
@@ -81,7 +82,15 @@ public class Appel extends JLabel{
         return listeAppel;
     }
 
+    public Ascenseur getAsc() {
+        return asc;
+    }
 
+    public void setAsc(Ascenseur asc) {
+        this.asc = asc;
+    }
+
+    
     //************************METHODES****************************
 
 

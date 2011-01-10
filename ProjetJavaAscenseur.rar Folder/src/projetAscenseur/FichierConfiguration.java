@@ -85,6 +85,7 @@ public class FichierConfiguration implements Serializable{
 
      public boolean setDefaultLogin(){
 
+        paramsLogin = new HashMap();
         //Insertion des valeurs par défaut dans le HASH
         paramsLogin.put("Login", new String("admin"));
         paramsLogin.put("mdp", new String("123123"));
