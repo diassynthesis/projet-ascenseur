@@ -400,7 +400,6 @@ public class Simulateur extends JFrame{
                 
                     //creation des personnes 
                     fabriquePersonne();
-                
                     //creation des ascenseurs 
                     creationAscenseurs(nbAscenseurBox.getSelectedIndex());
                     
