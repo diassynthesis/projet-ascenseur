@@ -167,6 +167,7 @@ public abstract class Personnes extends JLabel{
         {
             Ascenseur asc = (Ascenseur)obj;
             asc.supprimerPersonneAscenseur(this);
+            asc.supprimerAppel(this);
 	}
     	else if(obj instanceof Etage)
     	{
