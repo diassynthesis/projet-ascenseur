@@ -309,12 +309,12 @@ public class Immeuble extends JFrame implements Runnable{
 
         //On passe en mode appel pour le manager
         Appel ap = new Appel(etageDepart,etageArrivee,monte,null);
-        System.out.println("Appel de :"+etageDepart.getNumEtage());
-        listeAppel_Dest.add(ap);
+        //System.out.println("Appel de :"+etageDepart.getNumEtage());
+        //listeAppel_Dest.add(ap);
                 //On ajoute l'appel une seule fois - on vérifie donc si il n'existe pas d'appel à cet étage
         if(containsAppelAttente(etageDepart,etageArrivee,monte,null) == null)
            listeAppel_Attente.add(ap);
-        System.out.println("Nombre d'appels " + listeAppel_Attente.size());
+        //System.out.println("Nombre d'appels " + listeAppel_Attente.size());
         //Pour le simulateur
     	listeAppel.add(etageDepart);
         etageDepart.setBoutonAscenseur(true);
@@ -434,7 +434,7 @@ public class Immeuble extends JFrame implements Runnable{
         Appel appel = new Appel(etageDepart, etageArrivee, monte,asc);
 
          for (int j = getListeAppel_Attente().size()-1;j>=0; j--){
-                        System.out.println("On cherche un objet dans AppelAttente");
+                        //System.out.println("On cherche un objet dans AppelAttente");
                         if(getListeAppel_Attente().get(j).getSource() == etageDepart && getListeAppel_Attente().get(j).getAsc() == null)
                             return getListeAppel_Attente().get(j);
 
@@ -454,27 +454,32 @@ public class Immeuble extends JFrame implements Runnable{
 
         ArrayList<Ascenseur> listeAsc = getListeAscenseur();
     	//ArrayList<Etage> etageAppelant = getListeAppel();
-    	int val = 1500*Immeuble.NBEtage; //le nombre max d'etage
     	Ascenseur ascenseurQuiMonte = null;
         Ascenseur ascenseurQuiDescend = null;
         //Etage EtageLePlusHaut = new Etage(Immeuble.NBEtage);
+
+        //On récupere l'appel le plus haut - si = -1 => il n'y a pas d'appel donc personne veut bouger
         Appel appelLePlushaut = AppelLePlusHaut();
-    	int valTest = 1500*Immeuble.NBEtage;
+        //System.out.println("Etage le plus haut : " + appelLePlushaut.getSource().getNumEtage());
     	Etage etageRenvoye = null;
-        int index = -1;
+
+        
     	//pour chaque ascenseur on va tester si c lui le plus proche
     	//for(int i = 0; i< listeAsc.size();i++){
+
+        //On regarde l'appel le plus haut 
         if(appelLePlushaut.getSource().getNumEtage() != -1){
             //Si l'ascenseur courant est vide et qu'il n'a pas de destination
             if(asc.getListePersonne().isEmpty() && listeDestinationAscenseur.get(asc.getNumAscenseur()) == -1){
 
+                //On récupere les ascenseurs en cours de déplacement
                 ascenseurQuiMonte = unDesAscenseurMonte();
                 ascenseurQuiDescend = unDesAscenseurdescend();
-                 System.out.println("Le plus proche : ");
+                
                 //Si c'est un appel pour monter
                 if(appelLePlushaut.getMonte() ){
                     //Si un ascenseur est déja sur la route
-                    if( ascenseurQuiMonte!= null && ascenseurQuiMonte.getEtageCourant() < appelLePlushaut.getSource().getNumEtage()){
+                    if( ascenseurQuiMonte!= null && ascenseurQuiMonte.getEtageCourant() <= appelLePlushaut.getSource().getNumEtage()){
                         //On ne fait rien
                     }
                     //On exclue les différents ascenseurs
@@ -483,8 +488,8 @@ public class Immeuble extends JFrame implements Runnable{
                     }
                 }else{//L'appel le plus haut veut descendre
                     //Si un ascenseur est déja entrain de descendre et est au dessus de l'étage appelant
-                    if( ascenseurQuiDescend != null && ascenseurQuiDescend.getEtageCourant() > appelLePlushaut.getSource().getNumEtage()){
-                        //on ne fait rien
+                    if( ascenseurQuiDescend != null && ascenseurQuiDescend.getEtageCourant() >= appelLePlushaut.getSource().getNumEtage() && ascenseurQuiMonte != null && ascenseurQuiMonte.getEtageCourant() == Immeuble.getNBEtage() ){
+                          //on ne fait rien
                     }
                     //On exclue les différents ascenseurs
                     else if(jeSuisLePlusProcheVide(asc,appelLePlushaut)){
@@ -515,6 +520,8 @@ public class Immeuble extends JFrame implements Runnable{
             }
 
        }
+        System.out.println("Ascenseur " + asc.getNumAscenseur() + "Plus proche ? " + jeSuisLePlusProcheVide(asc,appelLePlushaut) + " de " + appelLePlushaut.getSource().getNumEtage());
+    	return etageRenvoye;
 /*
                 for(int j =0; j<listeAppel_Attente.size();j++){
                     System.out.println("Ascenseur vide en recherche de personnes. Qqun attend du  "+ listeAppel_Attente.get(j).getSource().getNumEtage());
@@ -562,7 +569,6 @@ public class Immeuble extends JFrame implements Runnable{
 
     	}
 */
-    	return etageRenvoye;
     }
     public static boolean quelquunAprendreIci(Ascenseur asc){
         boolean retour = false;
@@ -586,25 +592,46 @@ public class Immeuble extends JFrame implements Runnable{
         Ascenseur ascLePlusProcheVide = null;
         for(int j =0; j<listeAscenseur.size();j++){
             val = Math.abs(etageNum - listeAscenseur.get(j).getEtageCourant());
-            System.out.println("val : " + val +"Etage  : "+etageNum);
-            if(val < valTest){
+            //System.out.println("val : " + val +"Etage  : "+etageNum);
+            //On change la valeur de valTest si on a trouvé plus petit
+            if(val < valTest && listeAscenseur.get(j).getNbPersonne() == 0 ){
+                valTest = val;
                 ascLePlusProcheVide = listeAscenseur.get(j);
             }
         }
-        if(asc.getNumAscenseur() == ascLePlusProcheVide.getNumAscenseur()){
+        if(ascLePlusProcheVide == null){
+            return false;
+        }
+        else if(asc.getNumAscenseur() == ascLePlusProcheVide.getNumAscenseur())
+        {
+            System.out.println("L'ascenseur le plus proche de " + etageNum + "est :" +ascLePlusProcheVide.getNumAscenseur());
             return true;
         }
         return false;
     }
 
     private static Appel AppelLePlusHaut(){
-        Appel EtageLePlusHaut = new Appel(new Etage(-1),new Etage(0),true,null);
+        Appel EtageLePlusHautMonte = new Appel(new Etage(-1),new Etage(0),true,null);
+        Appel EtageLePlusHautDescend = new Appel(new Etage(-1),new Etage(0),false,null);
+
+        //System.out.println("Il y a x appels : " + listeDestinationAscenseur.size());
+        //On recherche dans les appels montants ceux qui sont le plus haut
         for(int j =0; j<listeAppel_Attente.size();j++){
-            if(listeAppel_Attente.get(j).getDest().getNumEtage() > EtageLePlusHaut.getSource().getNumEtage() && !listeDestinationAscenseur.contains(listeAppel_Attente.get(j).getDest().getNumEtage()))
-                EtageLePlusHaut = listeAppel_Attente.get(j);
+            if(listeAppel_Attente.get(j).getSource().getNumEtage() > EtageLePlusHautMonte.getSource().getNumEtage() && !listeDestinationAscenseur.contains(listeAppel_Attente.get(j).getDest().getNumEtage()))
+                EtageLePlusHautMonte = listeAppel_Attente.get(j);
         }
 
-        return EtageLePlusHaut;
+        //On recherche dans les appels descendants ceux qui sont le plus haut
+        for(int j =0; j<listeAppel_Attente.size();j++){
+            if(listeAppel_Attente.get(j).getSource().getNumEtage() > EtageLePlusHautDescend.getSource().getNumEtage() && !listeDestinationAscenseur.contains(listeAppel_Attente.get(j).getDest().getNumEtage()))
+                EtageLePlusHautDescend = listeAppel_Attente.get(j);
+        }
+
+        //On renvoie l'étage le plus haut
+        if(EtageLePlusHautDescend.getSource().getNumEtage() >= EtageLePlusHautMonte.getSource().getNumEtage() )
+            return EtageLePlusHautDescend;
+        else
+            return EtageLePlusHautMonte;
 
     }
 
@@ -626,7 +653,7 @@ public class Immeuble extends JFrame implements Runnable{
     private static Ascenseur unDesAscenseurdescend(){
         Ascenseur asc = null;
         for(int j =0; j<listeAscenseur.size();j++){
-            if(!listeAscenseur.get(j).isMonte() && listeDestinationAscenseur.get(j) != -1){
+            if((!listeAscenseur.get(j).isMonte() || (listeAscenseur.get(j).getNbPersonne() != 0 && !listeAscenseur.get(j).getListePersonne().get(0).veutMonter() )  )&& listeDestinationAscenseur.get(j) != -1){
                 asc = listeAscenseur.get(j);
                 break;
             }

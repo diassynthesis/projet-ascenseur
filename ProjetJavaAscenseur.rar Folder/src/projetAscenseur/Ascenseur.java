@@ -255,8 +255,9 @@ public class Ascenseur extends JFrame implements Runnable {
     public Personnes quelqunVeutMonterDansAsc()
     {
         Etage et = Etage.chercherEtageDsListe(this.getEtageCourant());
+        //System.out.println("Nombre de pers à l'étage : " + et.getListePersonne().size());
         Personnes result = null;
-        if(!this.isPlein()){ 
+        if(!this.isPlein()){
             for(int i =0; i<et.getListePersonne().size();i++)
             {
                 Personnes pCourante = et.getListePersonne().get(i);      
@@ -416,7 +417,7 @@ public class Ascenseur extends JFrame implements Runnable {
             immeuble.getListeAppel_Attente().remove(ap);
             ap.setAsc(this);
             immeuble.getListeAppels_Dest().add(ap);
-            System.out.println("Je viens de  "+ P.getEtageDepart().getNumEtage() + " je vais : " + P.getEtageArrive().getNumEtage() );
+            //System.out.println("Je viens de  "+ P.getEtageDepart().getNumEtage() + " je vais : " + P.getEtageArrive().getNumEtage() );
 
             listeAppels.add(ap);
         }
@@ -467,7 +468,7 @@ public class Ascenseur extends JFrame implements Runnable {
                     for (int j = 0;j< immeuble.getListeAppels_Dest().size(); j++){
                         // System.out.println("j : " +immeuble.getListeAppels_Dest().get(j).hashCode() +"-"+ appel.hashCode());
                         if(appel.hashCode()== immeuble.getListeAppels_Dest().get(j).hashCode()){
-                            System.out.println("Hash supprimé  :"+ immeuble.getListeAppels_Dest().get(j).hashCode() + "Nouvelle taille" +immeuble.getListeAppels_Dest().size() );
+                            //System.out.println("Hash supprimé  :"+ immeuble.getListeAppels_Dest().get(j).hashCode() + "Nouvelle taille" +immeuble.getListeAppels_Dest().size() );
                             ap = (immeuble.getListeAppels_Dest()).remove(j);
                         }
                         if(immeuble.getListeAppels_Dest().isEmpty())

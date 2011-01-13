@@ -40,14 +40,15 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
         //System.out.println("Je me déplace");
     	//Si il y a personne dans l'ascenseur
     	if(asc.getListeAppels().isEmpty()){
-            System.out.println("Je teste si je peux etre sélectionné : " + asc.getNumAscenseur());
-            if(Immeuble.InterogeImmeublePourDeplacement(asc)!=null){
-                int etageAppelant = Immeuble.InterogeImmeublePourDeplacement(asc).getNumEtage();
-                System.out.println("L'ascenseur est sélectionné : " + asc.getNumAscenseur() + "Je vais :"+ etageAppelant);
+            //System.out.println("Je teste si je peux etre sélectionné : " + asc.getNumAscenseur());
+            Etage etage = Immeuble.InterogeImmeublePourDeplacement(asc);
+            if(etage!=null){
+                int etageAppelant = etage.getNumEtage();
+                //System.out.println("L'ascenseur est sélectionné : " + asc.getNumAscenseur() + "Je vais :"+ etageAppelant);
                 //L'ascenseur doit aller a cet etage
                 if(asc.getEtageCourant()<etageAppelant ){
                     //if(Immeuble.quelquunAprendreIci(asc))
-                        //attendre();
+                    //attendre();
                     asc.monter();
                 }
                 else if(asc.getEtageCourant()>etageAppelant){
@@ -55,7 +56,6 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
                     asc.descendre();
                 }
                 else {
-                    //attendre();
                     // on arrive a l'etage de la personne on regle l'ascenseur en fonction de la personne
                     if(Immeuble.InterogeImmeublePourDeplacement(asc).getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
                         asc.setMonte(true);
@@ -80,7 +80,7 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
     else{
 
             int etageDestPers0 = asc.getListeAppels().get(0).getDest().getNumEtage();//Etage de la 1ere pers de la liste!
-            System.out.println("Qqun encore dans l'ascenseur - Dest : " +etageDestPers0 );
+            //System.out.println("Qqun encore dans l'ascenseur - Dest : " +etageDestPers0 );
             if(etageDestPers0<asc.getEtageCourant()){
                 asc.descendre();
                 if(asc.quelqunVeutDessendreDeAsc()!=null || asc.quelqunVeutMonterDansAsc()!=null){
@@ -135,13 +135,17 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
      */
 	public boolean accepterPersonne(Personnes p)
         {
+            //System.out.println("On tente d'ajouter une personne qui monte :  "+p.veutMonter() +"alors que asc monte : "+ asc.isMonte());
             boolean value = false;
         if(p.getTaille()<=asc.getNbPlacesRestantes())
         {
+            //System.out.println("Je suis au : " + asc.getEtageCourant() );
             if(p.veutMonter() && asc.isMonte() || asc.getNbPersActuel()==0){
                 value= true;
             }
             else if(!p.veutMonter() && !asc.isMonte()|| asc.getNbPersActuel()==0){
+                value= true;
+            }else if(asc.getNbPersActuel()==0){
                 value= true;
             }
             else{
@@ -169,7 +173,7 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
     }
 
     public String getName() {
-        return "Optimisation_nergie";
+        return "Optimisation_Energie";
     }
 
     public Class getType() {
