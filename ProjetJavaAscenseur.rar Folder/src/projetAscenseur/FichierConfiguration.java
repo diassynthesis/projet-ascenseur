@@ -44,7 +44,9 @@ public class FichierConfiguration implements Serializable{
     }
 
     public FichierConfiguration(){
-
+        setDefaultParamsJournee();
+        setDefaultParamsNuitWeekEnd();
+        setDefaultLogin();
     }
     /*public boolean getEstInitialise(){return this.estInitialise;}
     public void setEstInitialise(boolean valeur){this.estInitialise = valeur;}*/
