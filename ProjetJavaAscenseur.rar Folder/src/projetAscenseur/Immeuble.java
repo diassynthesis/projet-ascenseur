@@ -481,6 +481,7 @@ public class Immeuble extends JFrame implements Runnable{
                     //Si un ascenseur est déja sur la route
                     if( ascenseurQuiMonte!= null && ascenseurQuiMonte.getEtageCourant() <= appelLePlushaut.getSource().getNumEtage()){
                         //On ne fait rien
+                        
                     }
                     //On exclue les différents ascenseurs
                     else if(jeSuisLePlusProcheVide(asc,appelLePlushaut)){
@@ -489,7 +490,7 @@ public class Immeuble extends JFrame implements Runnable{
                 }else{//L'appel le plus haut veut descendre
                     //Si un ascenseur est déja entrain de descendre et est au dessus de l'étage appelant
                     if( ascenseurQuiDescend != null && ascenseurQuiDescend.getEtageCourant() >= appelLePlushaut.getSource().getNumEtage() && ascenseurQuiMonte != null && ascenseurQuiMonte.getEtageCourant() == Immeuble.getNBEtage() ){
-                          //on ne fait rien
+                        //on ne fait rien
                     }
                     //On exclue les différents ascenseurs
                     else if(jeSuisLePlusProcheVide(asc,appelLePlushaut)){
@@ -570,6 +571,21 @@ public class Immeuble extends JFrame implements Runnable{
     	}
 */
     }
+
+    private static Etage replacementAscenseur(Ascenseur asc){
+        int numAscenseur = asc.getNumAscenseur();
+        //Etage etageRenvoye = null;
+
+        switch(numAscenseur){
+            case 1:
+                    return new Etage(10);
+            default:
+                    return null;
+
+        }
+
+    }
+
     public static boolean quelquunAprendreIci(Ascenseur asc){
         boolean retour = false;
         Personnes p = asc.quelqunVeutMonterDansAsc();

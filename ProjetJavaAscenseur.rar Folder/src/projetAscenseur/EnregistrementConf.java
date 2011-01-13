@@ -173,19 +173,18 @@ public class EnregistrementConf extends javax.swing.JFrame {
      * @param mdp
      * @return boolean
      */
-    public String isLogin(String login, String mdp) {
+    public boolean isLogin(String login, String mdp) {
 
         HashMap HashLogin = ClassFichierConfiguration.getParamsLogin();
 
-        if (HashLogin.get("login") == login) {
-            if (HashLogin.get("mdp") == mdp) {
-                return "Success";
+        if (HashLogin.get("Login").equals(login)) {
+            if (HashLogin.get("mdp").equals(mdp)) {
+                return true;
             } else {
-                return "Mot de passe incorrect !";
+                return false;
             }
-        } else {
-            return "Identifiant incorrect !";
         }
+        return false;
     }
 
     /**
