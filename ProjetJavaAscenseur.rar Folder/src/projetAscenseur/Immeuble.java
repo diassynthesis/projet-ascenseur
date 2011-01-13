@@ -447,7 +447,7 @@ public class Immeuble extends JFrame implements Runnable{
      * @param asc l'ascenseur concernee
      * @return l'etage duquel il est le plus pres ou null si il est le plus eloigne
      */
-        public static Etage InterogeImmeublePourDeplacement(Ascenseur asc){
+        synchronized public static Etage InterogeImmeublePourDeplacement(Ascenseur asc){
 
         //Etage d'appel est-il supérieur ?
 
@@ -521,7 +521,7 @@ public class Immeuble extends JFrame implements Runnable{
             }
 
        }
-        System.out.println("Ascenseur " + asc.getNumAscenseur() + "Plus proche ? " + jeSuisLePlusProcheVide(asc,appelLePlushaut) + " de " + appelLePlushaut.getSource().getNumEtage());
+        //System.out.println("Ascenseur " + asc.getNumAscenseur() + "Plus proche ? " + jeSuisLePlusProcheVide(asc,appelLePlushaut) + " de " + appelLePlushaut.getSource().getNumEtage());
     	return etageRenvoye;
 /*
                 for(int j =0; j<listeAppel_Attente.size();j++){
@@ -620,7 +620,7 @@ public class Immeuble extends JFrame implements Runnable{
         }
         else if(asc.getNumAscenseur() == ascLePlusProcheVide.getNumAscenseur())
         {
-            System.out.println("L'ascenseur le plus proche de " + etageNum + "est :" +ascLePlusProcheVide.getNumAscenseur());
+            //System.out.println("L'ascenseur le plus proche de " + etageNum + "est :" +ascLePlusProcheVide.getNumAscenseur());
             return true;
         }
         return false;

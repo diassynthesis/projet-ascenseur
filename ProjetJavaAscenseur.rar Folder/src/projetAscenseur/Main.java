@@ -3,7 +3,7 @@ package projetAscenseur;
 
 /**
  * classe main qui lance la simulation
- * @author Checconi maxime, Pilot guillaume et Canessa Marine
+ * @author fabrice
  */
 public class Main {
     public static void main(String[] args){
@@ -13,8 +13,9 @@ public class Main {
          //On attend d'etre loggué pour continuer l'initialisation du programme
          while(!auth.isLogged());
          Simulateur simu = new Simulateur();
-         Manager mana = new Manager(simu);
+         Manager mana = new Manager(null);
          simu.setManager(mana);
+         mana.session();
         
     }
     

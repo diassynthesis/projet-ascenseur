@@ -109,7 +109,8 @@ public class Manager extends JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
 
-
+    private boolean activity = true;
+    private long debutSessionInactivity;
     //************************ACCESSEURS*****************************
     public static boolean isEnCreation() {
         return enCreation;
@@ -119,7 +120,47 @@ public class Manager extends JFrame {
         this.enCreation = enCreation;
     }
 
+    public boolean isFocused() {
+        if(simulateur != null)
+            return simulateur.isFocused();
+        return false;
+    }
+
+    public boolean hasFocus() {
+        return rootPane.hasFocus();
+    }
+
     //******************************METHODES*********************************
+
+    /**
+     * Permet de déconnecter l'application au bout de 10 minutes
+     * Fait disparaitre uniquement le manager car le simulateur ne fait pas parti de l'appli
+     * Un formulaire de connexion s'affiche
+     */
+    public void session(){
+        debutSessionInactivity = System.currentTimeMillis();
+        while(true){
+            if(this.isActive() || isFocused()){
+                debutSessionInactivity = System.currentTimeMillis();
+                //System.out.println("Focus");
+            }
+            if(System.currentTimeMillis()-this.debutSessionInactivity > 10000){
+                //System.out.println("Focus perdu");
+                this.setVisible(false);
+                //simulateur.setVisible(false);
+                Identification auth = new Identification();
+                auth.setVisible(true);
+                while(!auth.isLogged());
+                this.setVisible(true);
+                simulateur.setVisible(true);
+                debutSessionInactivity = System.currentTimeMillis();
+            }
+        }
+
+        
+    }
+
+
     public Manager(Simulateur sim) {
          super("Interface du Manager");
         simulateur = sim;
@@ -140,10 +181,15 @@ public class Manager extends JFrame {
         }
     }
 
+    public boolean checkAuthentification(String login, String mdp){
+
+        return false;
+    }
     /**
      * initialise l'interface du simulateur
      */
     public void initManager() throws MalformedURLException {
+
 
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu4 = new javax.swing.JMenu();
