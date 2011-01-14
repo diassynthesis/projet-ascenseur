@@ -5,14 +5,14 @@
 
 package projetAscenseur;
 import javax.swing.Icon;
-import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 
 import fr.unice.plugin.Plugin;
 /**
  *
  * @author max06
  */
-public class PluginMenuItem extends JCheckBoxMenuItem {
+public class PluginMenuItem extends JRadioButtonMenuItem {
 
     private Plugin plugin;
 
