@@ -144,7 +144,7 @@ public class Manager extends JFrame {
                 debutSessionInactivity = System.currentTimeMillis();
                 //System.out.println("Focus");
             }
-            if(System.currentTimeMillis()-this.debutSessionInactivity > 10000){
+            if(System.currentTimeMillis()-this.debutSessionInactivity > 600000){
                 //System.out.println("Focus perdu");
                 this.setVisible(false);
                 //simulateur.setVisible(false);

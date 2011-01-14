@@ -13,7 +13,7 @@ public class Main {
          //On attend d'etre loggué pour continuer l'initialisation du programme
          while(!auth.isLogged());
          Simulateur simu = new Simulateur();
-         Manager mana = new Manager(null);
+         Manager mana = new Manager(simu);
          simu.setManager(mana);
          mana.session();
         
