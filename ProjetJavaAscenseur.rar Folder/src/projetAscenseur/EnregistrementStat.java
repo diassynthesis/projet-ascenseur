@@ -58,9 +58,11 @@ public class EnregistrementStat extends ApplicationFrame {
     private JFreeChart chart;
     private ChartPanel chartPanel;
     private PieDataset datasetPie;
-    private DefaultCategoryDataset datasetBar;
+    private DefaultCategoryDataset datasetBar = new DefaultCategoryDataset();
     //variable de logique
     private String StatsFile = "Statistiques.xml";
+    private int typeGraphe = 1; //1 = barre
+    private int [] ascenseurs = {0}; //0 = assenseur non affiché
     private Statistiques stats = null;
     static private EnregistrementStat _instance = null;
     // End of variables declaration
@@ -123,7 +125,7 @@ public class EnregistrementStat extends ApplicationFrame {
         return result;
     }
 
-    private DefaultCategoryDataset createDatasetBarChart3D() {
+    private void createDatasetBarChart3D() {
 
 
 
@@ -134,22 +136,17 @@ public class EnregistrementStat extends ApplicationFrame {
         ArrayList arr = new ArrayList();
         //DefaultPieDataset dataset = new DefaultPieDataset();
 
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+      //  DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         for (int i = 0; i < nbAsc; i++) {
             arr = (ArrayList) sta.get(new Integer(i));
             System.out.print(arr.toString());
 
             if (arr != null) {
-                dataset.addValue(Float.parseFloat(arr.get(0).toString()), "Ascenseur " + (i + 1), "Montée");
-                dataset.addValue(Float.parseFloat(arr.get(1).toString()), "Ascenseur " + (i + 1), "Descente");
+                this.datasetBar.addValue(Float.parseFloat(arr.get(0).toString()), "Ascenseur " + (i + 1), "Montée");
+                this.datasetBar.addValue(Float.parseFloat(arr.get(1).toString()), "Ascenseur " + (i + 1), "Descente");
             }
         }
-        
-
-        return dataset;
-
-
     }
 
     /**
@@ -180,7 +177,7 @@ public class EnregistrementStat extends ApplicationFrame {
     private JFreeChart createBarChart3D(CategoryDataset dataset) {
 
        JFreeChart chart = ChartFactory.createBarChart(
-            "Bar Chart Demo",         // chart title
+            "Etage parcouru",         // chart title
             "Ascenseurs",               // domain axis label
             "Etages",                  // range axis label
             dataset,                  // data
@@ -197,14 +194,19 @@ public class EnregistrementStat extends ApplicationFrame {
 
     public void initChart() {
         //datasetPie = createDatasetPieChart3D();
-        datasetBar = createDatasetBarChart3D();
+        if (this.typeGraphe==1){
+            createDatasetBarChart3D();
+            chart = createBarChart3D(this.datasetBar);
+        } else if (this.typeGraphe==2){
+            PieDataset paset = createDatasetPieChart3D();
+            chart = createPieChart3D(paset);
+        }
         // create the chart...
-        //chart = createPieChart3D(datasetPie);
-        chart = createBarChart3D(datasetBar);
-        System.out.print("looool");
         // add the chart to a panel...
+
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+
         setContentPane(chartPanel);
     }
 
@@ -286,17 +288,21 @@ public class EnregistrementStat extends ApplicationFrame {
 
         jMenuBar1.add(jMenuGraphique);
 
-        setJMenuBar(jMenuBar1);
+        jRadioButtonMenuItemSecteur.addActionListener( new java.awt.event.ActionListener() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGap(596, 596, 596).addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addContainerGap(119, Short.MAX_VALUE)));
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addGap(124, 124, 124).addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGap(304, 304, 304)));
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                typeGraphe = 2;
+                initChart();
+            }
+        });
 
-        pack();
+        jRadioButtonMenuItemBarre.addActionListener( new java.awt.event.ActionListener() {
 
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                typeGraphe = 1;
+                initChart();
+            }
+        });
 
     }// </editor-fold>
 
@@ -321,6 +327,11 @@ public class EnregistrementStat extends ApplicationFrame {
     public void addStatistiques(Date date, Integer NumAsc, Integer monte) {
         this.stats.addStatistiques(date, NumAsc, monte);
         this.sauvegarde();
+       // System.out.println("repaint");
+
+       // this.repaint();
 
     }
+
+
 }

@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
-import javax.swing.JMenu;
+import javax.swing.*;
 
 import fr.unice.plugin.Plugin;
 import fr.unice.plugin.PluginLoader;
@@ -16,12 +16,12 @@ import fr.unice.plugin.PluginLoader;
  *
  * @author max06
  */
-public class PluginMenuItemFactory {
+public class PluginjComboBoxPluginFactory {
 
     /**
      * Le menu g?r? par cette instance.
      */
-    private JMenu menu;
+    private JComboBox combo;
     /**
      * Le chargeur de classes charge les plugins.
      */
@@ -35,7 +35,7 @@ public class PluginMenuItemFactory {
     /**
      * Construit une instance qui concerne un certain menu. Ce menu aura des choix qui permettront de
      * s?lectionner un plugin ou un autre.
-     * 
+     *
      * @param menu
      *           le menu g?r? par cette instance.
      * @param loader
@@ -43,54 +43,52 @@ public class PluginMenuItemFactory {
      * @param listener
      *           l'actionDeListener qui va ?couter les entr?es du menu.
      */
-    public PluginMenuItemFactory(JMenu menu, PluginLoader loader, ActionListener listener){ //ActionListener listener) {
-        this.menu = menu;
+    public PluginjComboBoxPluginFactory(JComboBox combo, PluginLoader loader, ActionListener listener){ //ActionListener listener) {
+        this.combo = combo;
         this.loader = loader;
         this.listener = listener;
     }
 
     /**
      * Construit le menu des plugins.
-     * 
+     *
      * @param type type des plugins utilis�s pour construire le menu. Si null, tous les types de plugin
      *           seront utilis�s pour construire le menu.
      */
     public void buildMenu(Class type) {
+
         if (loader == null) {
             return;
         }
         logger.info("Construction du menu des PLUGINS");
 
         // Enl?ve les entr?es pr?c?dentes s'il y en avait
-        menu.removeAll();
-
-        // R?cup?re les instances d?j? charg?es
+       // combo.removeAll();
 
         Plugin[] instancesPlugins = loader.getPluginInstances(type);
-        logger.info("Nombre de plugins trouv?s :" + instancesPlugins.length);
-        PluginMenuItem item;
+        logger.info("Nombre de plugins trouves :" + instancesPlugins.length);
+        PluginComboString item;
         // On ajoute une entr?e par instance de plugin
         for (int i = 0; i < instancesPlugins.length; i++) {
-             Plugin plugin = instancesPlugins[i];
+            Plugin plugin = instancesPlugins[i];
 
             String mi = plugin.getName();
-            item = new PluginMenuItem(mi);
+            item = new PluginComboString(mi);
             item.setPlugin(instancesPlugins[i]);
-            menu.add(item);
 
-            // menu.add(mi);
-            item.addActionListener(listener);
-
+            combo.addItem(item);
         }
+        combo.addActionListener(listener);
+
     }
 
     /**
      * l'accesseur de la donnee JMenu
-     * 
+     *
      * @return le JMenu
      */
-    public JMenu getMenu() {
-        return menu;
+    public JComboBox getCombo() {
+        return combo;
     }
 }
 

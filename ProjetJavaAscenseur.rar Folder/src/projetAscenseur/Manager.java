@@ -28,6 +28,11 @@ import fr.unice.plugin.PluginLoader;
 import java.util.Date;
 import projetAscenseur.EnregistrementConf;
 
+
+
+import fr.unice.plugin.Plugin;
+import fr.unice.plugin.PluginLoader;
+
 /**
  * classe representant l'interface graphique de la simulation
  * @author Checconi maxime, Pilot guillaume et Canessa Marine
@@ -111,6 +116,11 @@ public class Manager extends JFrame {
 
     private boolean activity = true;
     private long debutSessionInactivity;
+    private PluginjComboBoxPluginFactory pluginMenuItemFactory;
+    private PluginLoader PluginLoader;
+    private JMenu menuPlugin2;
+    private Plugin[] plugins;
+
     //************************ACCESSEURS*****************************
     public static boolean isEnCreation() {
         return enCreation;
@@ -162,7 +172,7 @@ public class Manager extends JFrame {
 
 
     public Manager(Simulateur sim) {
-         super("Interface du Manager");
+        super("Interface du Manager");
         simulateur = sim;
 
         try {
@@ -533,13 +543,13 @@ public class Manager extends JFrame {
             }
         });
 
-        jComboBoxPlugin.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Trajet", "Economie d'énergie"}));
-        jComboBoxPlugin.addActionListener(new java.awt.event.ActionListener() {
-
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxPluginActionPerformed(evt);
-            }
-        });
+       // jComboBoxPlugin.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Trajet", "Economie d'énergie"}));
+//        jComboBoxPlugin.addActionListener(new java.awt.event.ActionListener() {
+//
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                jComboBoxPluginActionPerformed(evt);
+//            }
+//        });
 
         jButtonDemarrerGene.setText("Démarrage ");
 
@@ -562,7 +572,7 @@ public class Manager extends JFrame {
         jMenuStatistiques.setText("Statistiques");
 
         jMenuItemConso.setText("Consommation");
-        
+
 
         jMenuItemConso.addActionListener(new java.awt.event.ActionListener() {
 
@@ -578,7 +588,7 @@ public class Manager extends JFrame {
 
         jMenuBar1.add(jMenuStatistiques);
 
-      
+
 
         setJMenuBar(jMenuBar1);
 
@@ -587,12 +597,14 @@ public class Manager extends JFrame {
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jComboBoxPlugin, javax.swing.GroupLayout.Alignment.TRAILING, 0, 258, Short.MAX_VALUE).addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE).addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE).addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE).addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE))).addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup().addGap(194, 194, 194).addComponent(jButtonMaintenanceGene, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(jButtonDemarrerGene, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))).addContainerGap()));
 
-        
+
 
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)).addGap(21, 21, 21).addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jButtonDemarrerGene).addComponent(jComboBoxPlugin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE).addComponent(jButtonMaintenanceGene)).addContainerGap()));
 
         pack();
+        //initialisation de la comboBox des plugins
+        initMenuPlugin();
     }// </editor-fold>
 
     private void jMenuItemAlgorithmeActionPerformed(java.awt.event.ActionEvent evt) {
@@ -655,8 +667,7 @@ public class Manager extends JFrame {
         jButtonMaintenanceActionPerformed(4);
     }
 
-
-    private void jMenuItemConsoActionPerformed(java.awt.event.ActionEvent evt)  {
+    private void jMenuItemConsoActionPerformed(java.awt.event.ActionEvent evt) {
         //this.enregistrementStat.initChart();
         enregistrementStat.setVisible(true);
     }
@@ -666,7 +677,7 @@ public class Manager extends JFrame {
         ArrayList<Ascenseur> listeAscenseur = immeuble.getListeAscenseur();
         int size = listeAscenseur.size();
         Ascenseur asc;
-        for(int i=0; i<size; i++){
+        for (int i = 0; i < size; i++) {
             asc = listeAscenseur.get(i);
 
             this.setMaintenance(i, true);
@@ -684,7 +695,7 @@ public class Manager extends JFrame {
         ArrayList<Ascenseur> listeAscenseur = immeuble.getListeAscenseur();
         int size = listeAscenseur.size();
 
-        for(int i=0; i<size; i++){
+        for (int i = 0; i < size; i++) {
             this.setMaintenance(i, false);
             // donc bouton generale devient active
             this.jButtonMaintenanceGene.setEnabled(true);
@@ -700,7 +711,7 @@ public class Manager extends JFrame {
     }
 
     private void jButtonMaintenanceActionPerformed(int numAsc) {
-        
+
         numAsc = numAsc - 1;
         Immeuble immeuble = simulateur.getImmeuble();
         ArrayList<Ascenseur> listeAscenseur = immeuble.getListeAscenseur();
@@ -711,27 +722,29 @@ public class Manager extends JFrame {
             this.jButtonMaintenanceGene.setEnabled(true);
             this.jButtonDemarrerGene.setEnabled(true);
             // si tt les ascensseurs sont demarrés
-            if (immeuble.allNotInMaintenance())
+            if (immeuble.allNotInMaintenance()) {
                 this.jButtonDemarrerGene.setEnabled(false);
+            }
         } else { //Je le met en maintenance
             this.setMaintenance(numAsc, true);
             // // on met les deux labels en acifs
-            this.jButtonMaintenanceGene.setEnabled(true); 
+            this.jButtonMaintenanceGene.setEnabled(true);
             this.jButtonDemarrerGene.setEnabled(true);
             // si tt les ascensseurs sont en maintenance
-            if (immeuble.allInMaintenance())
+            if (immeuble.allInMaintenance()) {
                 this.jButtonMaintenanceGene.setEnabled(false);
+            }
         }
 
     }
 
-    public void initValues(){
+    public void initValues() {
         Immeuble immeuble = simulateur.getImmeuble();
         Ascenseur asc;
         ArrayList<Ascenseur> listeAscenseur = immeuble.getListeAscenseur();
         int i = 0;
         int taille = listeAscenseur.size();
-        while (i<taille){
+        while (i < taille) {
             asc = listeAscenseur.get(i);
             if (asc.getMaintenance()) {
                 this.setMaintenance(i, true);
@@ -741,7 +754,7 @@ public class Manager extends JFrame {
             i++;
         }
 
-        while (i<6){
+        while (i < 6) {
             this.initValueBoutonAsc(i);
             i++;
         }
@@ -750,7 +763,7 @@ public class Manager extends JFrame {
         //this.jButtonDemarrerGene.setEnabled(true);
 
     }
- 
+
     /**
      * Rafraichit le numero d'ascenseur et la conso
      * @param numAscenseur
@@ -852,7 +865,7 @@ public class Manager extends JFrame {
         }
     }
 
-    public void initValueBoutonAsc(int numAsc){
+    public void initValueBoutonAsc(int numAsc) {
         String etat = new String("non utilisé");
 
         switch (numAsc) {
@@ -895,13 +908,66 @@ public class Manager extends JFrame {
     }
 
     //+1 monte -1 descent
-    public void saveStatistique(Date date, Integer numAsc, Integer direction){
-        System.out.print(date.toString()+" -- "+numAsc.toString()+" -- "+direction.toString());
+    public void saveStatistique(Date date, Integer numAsc, Integer direction) {
+        System.out.print(date.toString() + " -- " + numAsc.toString() + " -- " + direction.toString());
         this.enregistrementStat.addStatistiques(date, numAsc, direction);
         this.enregistrementStat.initChart();
         //enregistrementStat.setVisible(true);
     }
 
+    ///menu des plugin
+    public void buildPluginMenu() {
+        //menuPlugin2 = new JMenu("Plugins");
+        if (pluginMenuItemFactory == null) {
+            pluginMenuItemFactory = new PluginjComboBoxPluginFactory(jComboBoxPlugin, PluginLoader, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    ComportementAbstrait comportement = simulateur.getComportement();
+                    Immeuble imm  = simulateur.getImmeuble();
+                    for (Ascenseur asc : imm.getListeAscenseur()) {
+                                            
+                         //on recupere le JComboBox;
+                         JComboBox  aa = (JComboBox)e.getSource();
+                         //on recupere l'item selectionné dans la liste
+                         PluginComboString bb = (PluginComboString)aa.getSelectedItem();
+                        //on regarde quel comportement à été selectionné
+                        comportement = (ComportementAbstrait) bb.getPlugin();
+                        System.out.println(comportement.getClass());
 
+                        try {
+                            ComportementAbstrait c = comportement.getClass().newInstance();
+                            asc.setComportement(c);
+                            simulateur.setComportement(comportement);
+                        } catch (InstantiationException ex) {
+                            Logger.getLogger(Simulateur.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IllegalAccessException ex) {
+                            Logger.getLogger(Simulateur.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+                }
+            });
+        }
+        buildPluginMenuEntries();
+        //mb.add(menuPlugin2);
+        //menuPlugin2.setEnabled(false);
+    }
+
+    public void initMenuPlugin() {
+        try {
+            PluginLoader = new PluginLoader("plugins");
+            PluginLoader.loadPlugins();
+            plugins = PluginLoader.getPluginInstances();
+            System.out.println(plugins.length);
+            //setJMenuBar(mb);
+            buildPluginMenu();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Simulateur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void buildPluginMenuEntries() {
+
+        pluginMenuItemFactory.buildMenu(null);
+    }
 }//fin de la classe
 

@@ -138,6 +138,15 @@ public class Simulateur extends JFrame{
         return immeuble;
     }
 
+    public ComportementAbstrait getComportement(){
+        return this.comportement;
+    }
+    
+   public void setComportement(ComportementAbstrait comp){
+       this.comportement =  comp;
+   }
+
+
      public void initMenuPlugin(){
         try {
             PluginLoader = new PluginLoader("plugins");
