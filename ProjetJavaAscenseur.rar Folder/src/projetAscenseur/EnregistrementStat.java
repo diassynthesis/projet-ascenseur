@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.*;
 import java.io.Serializable;
+import javax.swing.ButtonGroup;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -62,7 +63,7 @@ public class EnregistrementStat extends ApplicationFrame {
     //variable de logique
     private String StatsFile = "Statistiques.xml";
     private int typeGraphe = 1; //1 = barre
-    private int [] ascenseurs = {0}; //0 = assenseur non affiché
+    private int ascenseurs[] = {1, 1, 1, 1, 1, 1, 1, 1, 1}; //0 = assenseur non affiché
     private Statistiques stats = null;
     static private EnregistrementStat _instance = null;
     // End of variables declaration
@@ -116,18 +117,23 @@ public class EnregistrementStat extends ApplicationFrame {
         DefaultPieDataset result = new DefaultPieDataset();
         for (int i = 0; i < this.stats.getNbAsc(); i++) {
             arr = (ArrayList) sta.get(new Integer(i));
-            System.out.print(arr.toString());
+            System.out.println("ascenseur " + i);
 
+            System.out.print(arr.toString());
             if (arr != null) {
-                result.setValue("Ascenseur " + (i + 1), new Double(arr.get(0).toString()));
+                if (ascenseurs[i] == 1) {
+
+                    result.setValue("Ascenseur " + (i + 1), new Double(arr.get(0).toString()));
+                } else {
+                    result.setValue("Ascenseur " + (i + 1), new Double(0));
+
+                }
             }
         }
         return result;
     }
 
     private void createDatasetBarChart3D() {
-
-
 
         int nbAsc = this.stats.getNbAsc();
 
@@ -136,15 +142,24 @@ public class EnregistrementStat extends ApplicationFrame {
         ArrayList arr = new ArrayList();
         //DefaultPieDataset dataset = new DefaultPieDataset();
 
-      //  DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
+        //  DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        this.datasetBar = new DefaultCategoryDataset();
         for (int i = 0; i < nbAsc; i++) {
+            System.out.println("ascenseur " + i);
             arr = (ArrayList) sta.get(new Integer(i));
             System.out.print(arr.toString());
 
             if (arr != null) {
-                this.datasetBar.addValue(Float.parseFloat(arr.get(0).toString()), "Ascenseur " + (i + 1), "Montée");
-                this.datasetBar.addValue(Float.parseFloat(arr.get(1).toString()), "Ascenseur " + (i + 1), "Descente");
+                if (ascenseurs[i] == 1) {
+
+                    this.datasetBar.addValue(Float.parseFloat(arr.get(0).toString()) * 1500, "Ascenseur " + (i + 1), "Montée");
+                    this.datasetBar.addValue(Float.parseFloat(arr.get(1).toString()) * 750, "Ascenseur " + (i + 1), "Descente");
+                } else {
+
+                    this.datasetBar.addValue(0, "Ascenseur " + (i + 1), "Montée");
+                    this.datasetBar.addValue(0, "Ascenseur " + (i + 1), "Descente");
+
+                }
             }
         }
     }
@@ -159,7 +174,7 @@ public class EnregistrementStat extends ApplicationFrame {
     private JFreeChart createPieChart3D(PieDataset dataset) {
 
         JFreeChart chart = ChartFactory.createPieChart3D(
-                "Etage parcouru", // chart title
+                "Consommation", // chart title
                 dataset, // data
                 true, // include legend
                 true,
@@ -176,16 +191,16 @@ public class EnregistrementStat extends ApplicationFrame {
 
     private JFreeChart createBarChart3D(CategoryDataset dataset) {
 
-       JFreeChart chart = ChartFactory.createBarChart(
-            "Etage parcouru",         // chart title
-            "Ascenseurs",               // domain axis label
-            "Etages",                  // range axis label
-            dataset,                  // data
-            PlotOrientation.VERTICAL, // orientation
-            true,                     // include legend
-            true,                     // tooltips?
-            false                     // URLs?
-        );
+        JFreeChart chart = ChartFactory.createBarChart(
+                "Consommation", // chart title
+                "Ascenseurs", // domain axis label
+                "Kilowatt", // range axis label
+                dataset, // data
+                PlotOrientation.VERTICAL, // orientation
+                true, // include legend
+                true, // tooltips?
+                false // URLs?
+                );
 
 
         return chart;
@@ -194,10 +209,10 @@ public class EnregistrementStat extends ApplicationFrame {
 
     public void initChart() {
         //datasetPie = createDatasetPieChart3D();
-        if (this.typeGraphe==1){
+        if (this.typeGraphe == 1) {
             createDatasetBarChart3D();
             chart = createBarChart3D(this.datasetBar);
-        } else if (this.typeGraphe==2){
+        } else if (this.typeGraphe == 2) {
             PieDataset paset = createDatasetPieChart3D();
             chart = createPieChart3D(paset);
         }
@@ -215,7 +230,6 @@ public class EnregistrementStat extends ApplicationFrame {
         // CREATION DE CHART
         // create a dataset...
 
-
         jPanel1 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuAscenseur = new javax.swing.JMenu();
@@ -226,10 +240,13 @@ public class EnregistrementStat extends ApplicationFrame {
         jCheckBoxMenuItemAsc5 = new javax.swing.JCheckBoxMenuItem();
         jCheckBoxMenuItemAsc6 = new javax.swing.JCheckBoxMenuItem();
         jMenuGraphique = new javax.swing.JMenu();
+
         jRadioButtonMenuItemHistogramme = new javax.swing.JRadioButtonMenuItem();
         jRadioButtonMenuItemBarre = new javax.swing.JRadioButtonMenuItem();
         jRadioButtonMenuItemCourbe = new javax.swing.JRadioButtonMenuItem();
         jRadioButtonMenuItemSecteur = new javax.swing.JRadioButtonMenuItem();
+
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -242,67 +259,165 @@ public class EnregistrementStat extends ApplicationFrame {
 
         jMenuAscenseur.setText("Ascenseur");
 
+
         jCheckBoxMenuItemAsc1.setSelected(true);
         jCheckBoxMenuItemAsc1.setText("Ascenseur 1");
+        jCheckBoxMenuItemAsc1.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jCheckBoxMenuItemAsc1.getState() == true) {
+                    ascenseurs[0] = 1;
+
+                } else {
+                    ascenseurs[0] = 0;
+
+                }
+                initChart();
+                setVisible(true);
+            }
+        });
         jMenuAscenseur.add(jCheckBoxMenuItemAsc1);
 
         jCheckBoxMenuItemAsc2.setSelected(true);
         jCheckBoxMenuItemAsc2.setText("Ascenseur 2");
+        jCheckBoxMenuItemAsc2.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jCheckBoxMenuItemAsc2.getState() == true) {
+                    ascenseurs[1] = 1;
+
+                } else {
+                    ascenseurs[1] = 0;
+
+                }
+                initChart();
+                setVisible(true);
+            }
+        });
         jMenuAscenseur.add(jCheckBoxMenuItemAsc2);
 
         jCheckBoxMenuItemAsc3.setSelected(true);
         jCheckBoxMenuItemAsc3.setText("Ascenseur 3");
+        jCheckBoxMenuItemAsc3.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jCheckBoxMenuItemAsc3.getState() == true) {
+                    ascenseurs[2] = 1;
+
+                } else {
+                    ascenseurs[2] = 0;
+
+                }
+                initChart();
+                setVisible(true);
+            }
+        });
         jMenuAscenseur.add(jCheckBoxMenuItemAsc3);
 
         jCheckBoxMenuItemAsc4.setSelected(true);
         jCheckBoxMenuItemAsc4.setText("Ascenseur 4");
+        jCheckBoxMenuItemAsc4.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jCheckBoxMenuItemAsc4.getState() == true) {
+                    ascenseurs[3] = 1;
+
+                } else {
+                    ascenseurs[3] = 0;
+
+                }
+                initChart();
+                setVisible(true);
+            }
+        });
         jMenuAscenseur.add(jCheckBoxMenuItemAsc4);
 
         jCheckBoxMenuItemAsc5.setSelected(true);
         jCheckBoxMenuItemAsc5.setText("Ascenseur 5");
+        jCheckBoxMenuItemAsc5.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jCheckBoxMenuItemAsc5.getState() == true) {
+                    ascenseurs[4] = 1;
+
+                } else {
+                    ascenseurs[4] = 0;
+
+                }
+                initChart();
+                setVisible(true);
+            }
+        });
         jMenuAscenseur.add(jCheckBoxMenuItemAsc5);
 
         jCheckBoxMenuItemAsc6.setSelected(true);
         jCheckBoxMenuItemAsc6.setText("Ascenseur 6");
+        jCheckBoxMenuItemAsc6.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jCheckBoxMenuItemAsc6.getState() == true) {
+                    ascenseurs[5] = 1;
+
+                } else {
+                    ascenseurs[5] = 0;
+
+                }
+                initChart();
+                setVisible(true);
+            }
+        });
         jMenuAscenseur.add(jCheckBoxMenuItemAsc6);
 
         jMenuBar1.add(jMenuAscenseur);
 
         jMenuGraphique.setText("Graphique");
 
-        jRadioButtonMenuItemHistogramme.setSelected(true);
-        jRadioButtonMenuItemHistogramme.setText("Histogramme");
-        jMenuGraphique.add(jRadioButtonMenuItemHistogramme);
 
         jRadioButtonMenuItemBarre.setSelected(true);
         jRadioButtonMenuItemBarre.setText("Barre");
         jMenuGraphique.add(jRadioButtonMenuItemBarre);
 
-        jRadioButtonMenuItemCourbe.setSelected(true);
-        jRadioButtonMenuItemCourbe.setText("Courbe");
-        jMenuGraphique.add(jRadioButtonMenuItemCourbe);
+//        jRadioButtonMenuItemHistogramme.setSelected(false);
+//        jRadioButtonMenuItemHistogramme.setText("Histogramme");
+//        jMenuGraphique.add(jRadioButtonMenuItemHistogramme);
+//
+//
+//
+//        jRadioButtonMenuItemCourbe.setSelected(false);
+//        jRadioButtonMenuItemCourbe.setText("Courbe");
+//        jMenuGraphique.add(jRadioButtonMenuItemCourbe);
 
-        jRadioButtonMenuItemSecteur.setSelected(true);
+        jRadioButtonMenuItemSecteur.setSelected(false);
         jRadioButtonMenuItemSecteur.setText("Secteur");
         jMenuGraphique.add(jRadioButtonMenuItemSecteur);
 
         jMenuBar1.add(jMenuGraphique);
+        setJMenuBar(jMenuBar1);
 
-        jRadioButtonMenuItemSecteur.addActionListener( new java.awt.event.ActionListener() {
+
+        jRadioButtonMenuItemSecteur.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 typeGraphe = 2;
+                jRadioButtonMenuItemBarre.setSelected(false);
                 initChart();
+                setVisible(true);
             }
         });
 
-        jRadioButtonMenuItemBarre.addActionListener( new java.awt.event.ActionListener() {
+        jRadioButtonMenuItemBarre.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 typeGraphe = 1;
+                jRadioButtonMenuItemSecteur.setSelected(false);
                 initChart();
+                setVisible(true);
+
             }
         });
+
+        pack();
+
 
     }// </editor-fold>
 
@@ -327,11 +442,9 @@ public class EnregistrementStat extends ApplicationFrame {
     public void addStatistiques(Date date, Integer NumAsc, Integer monte) {
         this.stats.addStatistiques(date, NumAsc, monte);
         this.sauvegarde();
-       // System.out.println("repaint");
+        // System.out.println("repaint");
 
-       // this.repaint();
+        // this.repaint();
 
     }
-
-
 }
