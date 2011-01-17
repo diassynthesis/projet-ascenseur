@@ -37,9 +37,34 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
      */
     public void seDeplacer()
     {
-        //System.out.println("Je me déplace");
+        //Dans le cas de maintenance
+        if(asc.getMaintenance()){
+            //soit je ne fais rien lorsqu'on a personne
+            if(asc.getListeAppels().isEmpty()){}
+            //soit je me charge de vider les personnes présentes dans l'ascenseur
+            else{
+                while(!asc.getListeAppels().isEmpty()){
+                    int etageAppelant = asc.getListeAppels().get(0).getDest().getNumEtage();
+                    if(asc.getEtageCourant()<etageAppelant ){
+                    //if(Immeuble.quelquunAprendreIci(asc))
+                    //attendre();
+                    asc.monter();
+                    }
+                    else if(asc.getEtageCourant()>etageAppelant){
+                    //attendre();
+                    asc.descendre();
+                    }
+                    else{
+                        attendre();
+                    }
+                }
+            }
+
+        }
+        //Ascenseur démaré
     	//Si il y a personne dans l'ascenseur
-    	if(asc.getListeAppels().isEmpty()){
+        else if(asc.getListeAppels().isEmpty())
+        {
             //System.out.println("Je teste si je peux etre sélectionné : " + asc.getNumAscenseur());
             Etage etage = Immeuble.InterogeImmeublePourDeplacement(asc);
             if(etage!=null){
@@ -47,21 +72,18 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
                 //System.out.println("L'ascenseur est sélectionné : " + asc.getNumAscenseur() + "Je vais :"+ etageAppelant);
                 //L'ascenseur doit aller a cet etage
                 if(asc.getEtageCourant()<etageAppelant ){
-                    //if(Immeuble.quelquunAprendreIci(asc))
-                    //attendre();
                     asc.monter();
                 }
                 else if(asc.getEtageCourant()>etageAppelant){
-                    //attendre();
                     asc.descendre();
                 }
                 else {
                     // on arrive a l'etage de la personne on regle l'ascenseur en fonction de la personne
-                    if(Immeuble.InterogeImmeublePourDeplacement(asc).getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
+                    if(etage.getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
                         asc.setMonte(true);
                         attendre();
                     }
-                    else if(Immeuble.InterogeImmeublePourDeplacement(asc).getListePersonne().get(0).veutMonter() == false && !asc.isMonte()){
+                    else if(etage.getListePersonne().get(0).veutMonter() == false && !asc.isMonte()){
                         asc.setMonte(false);
                         attendre();
                     }
@@ -69,7 +91,7 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
                         asc.setMonte(true);
                         attendre();
                     }
-                    else if(Immeuble.InterogeImmeublePourDeplacement(asc).getListePersonne().get(0).veutMonter() == false && asc.isMonte()){
+                    else if(etage.getListePersonne().get(0).veutMonter() == false && asc.isMonte()){
                         asc.setMonte(false);
                         attendre();
                     }
@@ -118,7 +140,7 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
         {
             asc.reveillerPersonne(asc.quelqunVeutDessendreDeAsc());
         }
-        while(asc.quelqunVeutMonterDansAsc()!= null ){
+        while(asc.quelqunVeutMonterDansAsc()!= null && !asc.getMaintenance()){
              asc.reveillerPersonne(asc.quelqunVeutMonterDansAsc());
         }
          try {
