@@ -6,77 +6,120 @@ import projetAscenseur.*;
 import projetAscenseur.strategy.ComportementAbstrait;
 
 /**
- * comportement qui gère l'optimisation du tajet
- * @author A. COTTEN, A. MORTEMOUSQUE, F. BOURGEON et C. FAUCHER
+ * comportement intelligent qui recupere les personnes en fonction de l'ordre d'appel
+ * @author Checconi maxime, Pilot guillaume et Canessa Marine
  */
 public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
 
     private Ascenseur asc;
-    //private int parite;             //todo // mode de fonctionnement pair si vaut 0 et impair si vaut 1
-    //private Etage EtageDefaut;      //todo
-    private int NextHop;
+    private int parite =0;
+
+    public int getParite() {
+        return parite;
+    }
+
+    public void setParite(int parite) {
+        this.parite = parite;
+    }
 
 
     public ComportementOptimisationDuTrajet(){}
-    public ComportementOptimisationDuTrajet(Ascenseur asc ) //, int parite, Etage defaut) //todo
+    public ComportementOptimisationDuTrajet(Ascenseur asc)
     {
         this.asc=asc;
-        //this.parite=parite;           //todo
-        //this.EtageDefaut=defaut;      //todo
-
     }
+
+
+    public void setAscenseur(Ascenseur asc){  this.asc = asc;  }
 
      /**
      * l'ascenseur se deplace dans les etages
      */
     public void seDeplacer()
     {
-        if(!asc.getMaintenance())                            // Si l'ascenseur n'est pas en maintenance
+        //Dans le cas de maintenance
+        if(asc.getMaintenance()){
+            //soit je ne fais rien lorsqu'on a personne
+            if(asc.getListeAppels().isEmpty()){}
+            //soit je me charge de vider les personnes présentes dans l'ascenseur
+            else{
+                while(!asc.getListeAppels().isEmpty()){
+                    int etageAppelant = asc.getListeAppels().get(0).getDest().getNumEtage();
+                    if(asc.getEtageCourant()<etageAppelant ){
+                    //if(Immeuble.quelquunAprendreIci(asc))
+                    //attendre();
+                    asc.monter();
+                    }
+                    else if(asc.getEtageCourant()>etageAppelant){
+                    //attendre();
+                    asc.descendre();
+                    }
+                    else{
+                        attendre();
+                    }
+                }
+            }
+
+        }
+        //Ascenseur démaré
+    	//Si il y a personne dans l'ascenseur
+        else if(asc.getListeAppels().isEmpty())
         {
-
-            if( Immeuble.AscLePlusProcheTemporellement(asc) != null)            // Si il existe un étage pour la prochaine étape
-            {
-               NextHop = Immeuble.AscLePlusProcheTemporellement(asc).getNumEtage();
+            //System.out.println("Je teste si je peux etre sélectionné : " + asc.getNumAscenseur());
+            Etage etage = Immeuble.InterogeImmeublePourDeplacementTemporel(asc);
+            if(etage!=null){
+                int etageAppelant = etage.getNumEtage();
+                System.out.println("L'ascenseur est sélectionné : " + asc.getNumAscenseur() + "Je vais :"+ etageAppelant);
+                //L'ascenseur doit aller a cet etage
+                if(asc.getEtageCourant()<etageAppelant ){
+                    asc.monter();
+                }
+                else if(asc.getEtageCourant()>etageAppelant){
+                    asc.descendre();
+                }
+                else {
+                    // on arrive a l'etage de la personne on regle l'ascenseur en fonction de la personne
+                    if(etage.getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
+                        asc.setMonte(true);
+                        attendre();
+                    }
+                    else if(etage.getListePersonne().get(0).veutMonter() == false && !asc.isMonte()){
+                        asc.setMonte(false);
+                        attendre();
+                    }
+                    else if(Immeuble.InterogeImmeublePourDeplacementTemporel(asc).getListePersonne().get(0).veutMonter() == true && !asc.isMonte()){
+                        asc.setMonte(true);
+                        attendre();
+                    }
+                    else if(etage.getListePersonne().get(0).veutMonter() == false && asc.isMonte()){
+                        asc.setMonte(false);
+                        attendre();
+                    }
+                }
             }
-            else
-            {
-               //NextHop = EtageDefaut.getNumEtage();
-            }
+    }
+    //Si il y a qq1 dans l'ascenseur
+    else{
 
-            //L'ascenseur réagit en fonction du NextHop
-            if(asc.getEtageCourant() == NextHop)
+            int etageDestPers0 = asc.getListeAppels().get(0).getDest().getNumEtage();//Etage de la 1ere pers de la liste!
+            //System.out.println("Qqun encore dans l'ascenseur - Dest : " +etageDestPers0 );
+            if(etageDestPers0<asc.getEtageCourant()){
+                asc.descendre();
+                if(asc.quelqunVeutDessendreDeAsc()!=null || asc.quelqunVeutMonterDansAsc()!=null){
+                        attendre();
+                }
+            }
+            else if(etageDestPers0>asc.getEtageCourant()){
+                asc.monter();
+                if(asc.quelqunVeutDessendreDeAsc()!=null || asc.quelqunVeutMonterDansAsc()!=null){
+                        attendre();
+                }
+            }
+            else if(etageDestPers0 == asc.getEtageCourant())
             {
                 attendre();
             }
-            if(asc.getEtageCourant()<NextHop)
-            {
-                asc.monter();
-            }
-            else if(asc.getEtageCourant()>NextHop)
-            {
-                asc.descendre();
-            }
-
-        }
-        else
-        {
-            // Faire le cas Maintenance: retour à l'étage 0 et on ouvre les portes quelques secondes puis on ferme les portes.
-            System.out.println("L'ascenseur n°" + asc.getNumAscenseur() + "est en maintenance");
-
-            while(asc.getEtageCourant()>0)              //Tant que l'ascenseur n'est pas en bas
-            {
-                asc.descendre();
-            }
-            asc.ouvrirPorte();
-            try {                                       // Permet de laisser la porte ouverte pour faire descendre les personnes avant la fermerture de la porte
-                    Thread.sleep(500);
-            } catch (InterruptedException e) {
-                    e.printStackTrace();
-            }
-            asc.fermerPorte();
-
-        }
-
+    	}
     }
 
 
@@ -84,104 +127,80 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
      * simule l'attente de l'ascenseur pendant que les personnes montent dedans ou en descendent
      * quand tout le monde est monté il ferme ses portes
      */
-    public void attendre()
-    {
-        System.out.println("L'ascenseur doit récupérer une personne");
-        // Faire attention de prendre en compte qu'il est possible que l'ascenseur se soit juste replacé
-
-        // Test d'un copie colle de l'autre programme todo
-
-        while(ascenseurDejaLa()){
-    	try {
-            Thread.sleep(asc.getTemporisation());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        }
-
+    public void attendre(){
+    	while(ascenseurDejaLa()){
+            try {
+                    Thread.sleep(asc.getTemporisation());
+            } catch (InterruptedException e) {
+                    e.printStackTrace();
+            }
+    	}
         asc.ouvrirPorte();
         while(asc.quelqunVeutDessendreDeAsc()!=null)
         {
             asc.reveillerPersonne(asc.quelqunVeutDessendreDeAsc());
         }
-         while(asc.quelqunVeutMonterDansAsc()!= null){
-             if(accepterPersonne(asc.quelqunVeutMonterDansAsc())==true){
-                 asc.reveillerPersonne(asc.quelqunVeutMonterDansAsc());
-             }
+        while(asc.quelqunVeutMonterDansAsc()!= null && !asc.getMaintenance()){
+             asc.reveillerPersonne(asc.quelqunVeutMonterDansAsc());
         }
-
          try {
-            Thread.sleep(asc.getTemporisation());
+                Thread.sleep(asc.getTemporisation());
         } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-            e.printStackTrace();
+                e.printStackTrace();
         }
         asc.fermerPorte();
-
-
-
-
-        // Fin Test todo
-
-
     }
 
     /**
      * indique si l'ascenseur accepte de prendre une personne ou pas
      * @return vrai si l'ascenseur accepte quelqu'un
      */
-    public boolean accepterPersonne(Personnes p)
-    {
-        boolean value = false;
-        if(asc.getMaintenance())                                                // Si l'ascenseur est en maintenance il ne va accepter personne
+	public boolean accepterPersonne(Personnes p)
         {
-            value = false;
-        }
-        else
+            //System.out.println("On tente d'ajouter une personne qui monte :  "+p.veutMonter() +"alors que asc monte : "+ asc.isMonte());
+            boolean value = false;
+        if(p.getTaille()<=asc.getNbPlacesRestantes())
         {
-            if(p.getTaille()<=asc.getNbPlacesRestantes())
-            {
-                if(p.veutMonter() && asc.isMonte() || asc.getNbPersActuel()==0){
-                    value= true;
-                }
-                else if(!p.veutMonter() && !asc.isMonte()|| asc.getNbPersActuel()==0){
-                    value= true;
-                }
-                else{
-                    value= false;
-                }
+            //System.out.println("Je suis au : " + asc.getEtageCourant() );
+            if(p.veutMonter() && asc.isMonte() || asc.getNbPersActuel()==0){
+                value= true;
+            }
+            else if(!p.veutMonter() && !asc.isMonte()|| asc.getNbPersActuel()==0){
+                value= true;
+            }else if(asc.getNbPersActuel()==0){
+                value= true;
+            }
+            else{
+                value= false;
             }
         }
         return value;
-    }
+        }
 
-    /**
-     * recherche si un ascenseur est deja present à l'etage
-     * @return vrai si il y a deja un ascenseur
-     */
-    public boolean ascenseurDejaLa()
-    {
+        /**
+         * recherche si un ascenseur est deja là pour recuperer les gens
+         * @return vrai ou faux
+         */
+	public boolean ascenseurDejaLa()
+        {
     	for(Ascenseur a : Immeuble.getListeAscenseur())
     	{
-    		int numEt = a.getEtageCourant();
-    		if(numEt == asc.getEtageCourant() && a.isPortesOuvertes())
-    		{
-    			return true;
-    		}
+            int numEt = a.getEtageCourant();
+            if(numEt == asc.getEtageCourant() && a.isPortesOuvertes())
+            {
+                    return true;
+            }
     	}
     	return false;
     }
 
-     public void setAscenseur(Ascenseur asc){
-         this.asc = asc;
-     }
-
     public String getName() {
-        return "Optimisation du trajet";
+        return "Optimisation-Temps";
     }
 
     public Class getType() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    public int getParite(){return -1;}
+
+
 }
