@@ -13,6 +13,9 @@ import java.util.Date;
 import javax.swing.*;
 import projetAscenseur.visitor.concreteVisitor.HumeurVisitor;
 import projetAscenseur.visitor.concreteVisitor.TpsVisitor;
+import java.util.*;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 /**
  * classe immeuble composee d'etage
@@ -81,7 +84,7 @@ public class Immeuble extends JFrame implements Runnable{
         
     }
 
-    public Manager getManager(){
+    synchronized public Manager getManager(){
         return manager;
     }
     
@@ -441,6 +444,96 @@ public class Immeuble extends JFrame implements Runnable{
            }
         return null;
     }
+    //********************************* Methodes pour la gestion d'économie de temps ************************
+    synchronized public static Etage InterogeImmeublePourDeplacementTemporel(Ascenseur asc){
+
+        isNight();
+        if(listeAppel_Attente.isEmpty()){
+            //On ve raplacer les différents ascenseurs
+            Etage eta =  new Etage(2);
+            return eta;
+        }
+
+        //Etage d'appel est-il supérieur ?
+
+
+        ArrayList<Ascenseur> listeAsc = getListeAscenseur();
+    	//ArrayList<Etage> etageAppelant = getListeAppel();
+    	Ascenseur ascenseurQuiMonte = null;
+        Ascenseur ascenseurQuiDescend = null;
+        //Etage EtageLePlusHaut = new Etage(Immeuble.NBEtage);
+
+        //On récupere l'appel le plus haut - si = -1 => il n'y a pas d'appel donc personne veut bouger
+        Appel dernierAppel ;
+        //System.out.println("Etage le plus haut : " + appelLePlushaut.getSource().getNumEtage());
+    	Etage etageRenvoye = null;
+
+
+    	//pour chaque ascenseur on va tester si c lui le plus proche
+    	for(int i = 0; i< listeAppel_Attente.size() && etageRenvoye == null ;i++){
+            dernierAppel = listeAppel_Attente.get(i);
+            //On regarde l'appel le plus haut
+            if(dernierAppel.getSource().getNumEtage() != -1){
+                //Si l'ascenseur courant est vide et qu'il n'a pas de destination
+                if(asc.getListePersonne().isEmpty() && listeDestinationAscenseur.get(asc.getNumAscenseur()) == -1){
+
+                    //On récupere les ascenseurs en cours de déplacement
+                    ascenseurQuiMonte = unDesAscenseurMonte();
+                    ascenseurQuiDescend = unDesAscenseurdescend();
+
+                    //Si c'est un appel pour monter
+                    if(dernierAppel.getMonte() ){
+                        //Si un ascenseur est déja sur la route
+                        if( ascenseurQuiMonte!= null && ascenseurQuiMonte.getEtageCourant() <= dernierAppel.getSource().getNumEtage()){
+                            //On ne fait rien
+
+                        }
+                        //On exclue les différents ascenseurs
+                        else if(jeSuisLePlusProcheVide(asc,dernierAppel)){
+                            etageRenvoye = dernierAppel.getSource();
+                        }
+                    }else{//L'appel le plus haut veut descendre
+                        //Si un ascenseur est déja entrain de descendre et est au dessus de l'étage appelant
+                        if( ascenseurQuiDescend != null && ascenseurQuiDescend.getEtageCourant() >= dernierAppel.getSource().getNumEtage() && ascenseurQuiMonte != null && ascenseurQuiMonte.getEtageCourant() == Immeuble.getNBEtage() ){
+                            //on ne fait rien
+                        }
+                        //On exclue les différents ascenseurs
+                        else if(jeSuisLePlusProcheVide(asc,dernierAppel)){
+                            etageRenvoye = dernierAppel.getSource();
+                        }
+                    }
+
+                 //Sinon l'ascenseur est vide mais va déja quelquepart
+                }else if(asc.getListePersonne().isEmpty() && listeDestinationAscenseur.get(asc.getNumAscenseur()) != -1){
+                    int numEtageRenvoye = listeDestinationAscenseur.get(asc.getNumAscenseur());
+                    etageRenvoye = new Etage(numEtageRenvoye);
+
+
+                }else{
+                    //Si on est arrivé à l'étage du premier appelant ou d'un second
+                    if(listeDestinationAscenseur.get(asc.getNumAscenseur()) == asc.getEtageCourant()){
+                        //Si l'ascenseur est vide et a nulle part ou aller après que sa dernière personne soit sortie
+                        if(1 == asc.getListePersonne().size()){
+                            listeDestinationAscenseur.remove(asc.getNumAscenseur());
+                            listeDestinationAscenseur.add(asc.getNumAscenseur(), -1);
+                        }
+                        //Sinon on va à la destination de la premiere autre personne
+                        else{
+                            listeDestinationAscenseur.remove(asc.getNumAscenseur());
+                            listeDestinationAscenseur.add(asc.getNumAscenseur(), asc.getListePersonne().get(1).getEtageArrive().getNumEtage());
+                        }
+                    }
+                }
+
+           }
+        }
+        if(asc.getMaintenance())
+            return null;
+    	return etageRenvoye;
+    }
+
+
+    
     //********************************* Methodes pour la gestion d'économie d'énergie ************************
     /**
      * permet de savoir si un ascenseur est le plus proche d'un des etages appelants
@@ -448,6 +541,13 @@ public class Immeuble extends JFrame implements Runnable{
      * @return l'etage duquel il est le plus pres ou null si il est le plus eloigne
      */
         synchronized public static Etage InterogeImmeublePourDeplacement(Ascenseur asc){
+
+        isNight();
+        if(listeAppel_Attente.isEmpty()){
+            //On ve raplacer les différents ascenseurs
+            Etage eta =  new Etage(2);
+            return eta;
+        }
 
         //Etage d'appel est-il supérieur ?
 
@@ -522,63 +622,40 @@ public class Immeuble extends JFrame implements Runnable{
 
        }
         //System.out.println("Ascenseur " + asc.getNumAscenseur() + "Plus proche ? " + jeSuisLePlusProcheVide(asc,appelLePlushaut) + " de " + appelLePlushaut.getSource().getNumEtage());
+
+        //Si l'ascensceur est en maintenance on ne bouge pas
+        if(asc.getMaintenance())
+            return null;
     	return etageRenvoye;
-/*
-                for(int j =0; j<listeAppel_Attente.size();j++){
-                    System.out.println("Ascenseur vide en recherche de personnes. Qqun attend du  "+ listeAppel_Attente.get(j).getSource().getNumEtage());
-                    //On calcule la distance
-                    //On calcule dans le sens de la monté
-                    if(listeAppel_Attente.get(j).getSource().getNumEtage() > listeAsc.get(i).getEtageCourant())
-                        valTest = 1500 * (listeAppel_Attente.get(j).getSource().getNumEtage()- listeAsc.get(i).getEtageCourant());
-                    //En descente
-                    else if(listeAppel_Attente.get(j).getSource().getNumEtage() < listeAsc.get(i).getEtageCourant())
-                        valTest = 749 * (listeAsc.get(i).getEtageCourant() - listeAppel_Attente.get(j).getSource().getNumEtage() );
-                    else{
-                        valTest = 0 ;
-                    }
-                    if(valTest<val){//normalement avec cette condition un seul ascenseur prend la main pas de conflit
-                        ascSelect = listeAsc.get(i);
-                        etageRenvoye = listeAppel_Attente.get(j).getSource();
-                        index = j;
-                        val = valTest;
-                    }
-
-                    if(listeAppel_Attente.get(j).getSource().getNumEtage() > EtageLePlusHaut.getNumEtage() )
-                        EtageLePlusHaut = listeAppel_Attente.get(j).getSource();
-                }
-            }else{//Sinon on a deja quelqun
-                return null;
-               /* System.out.println("L'ascenseur est plein");
-               for(int j =0; j<listeAppel_Attente.size();j++){
-                    //System.out.println("Ascenseur vide en recherche de personnes. Qqun attend du  "+ listeAppel_Dest.get(j).getSource().getNumEtage());
-                    //On calcule la distance
-                    //On calcule dans le sens de la monté
-                    if(listeAsc.get(i).getListeAppels().contains(listeAppel_Attente.get(j)) && listeAppel_Attente.get(j).getSource().getNumEtage() == listeAsc.get(i).getEtageCourant()){
-
-                        ascSelect = listeAsc.get(i);
-                        listeAppel_Attente.get(i).setAsc(asc);
-                        return listeAsc.get(i).getListePersonne().get(0).getEtageArrive();
-                        //etageRenvoye = listeAppel_Dest.get(j).getSource();
-                        //index = j;
-                    }
-                }
-            }
-    	}
-    	if(ascSelect == asc && index !=-1){
-                listeAppel_Attente.get(index).setAsc(asc);
-    		return EtageLePlusHaut;
-
-    	}
-*/
     }
 
-    private static Etage replacementAscenseur(Ascenseur asc){
+    private static boolean isNight(){
+        long dateactuelle = System.currentTimeMillis();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH");
+        Date d = new Date();  // convert string to date
+        
+        if(d.getHours() > 19 && d.getHours() < 7)
+            return true;
+        else
+            return false;
+
+    }
+    public static Etage replacementAscenseur(Ascenseur asc){
         int numAscenseur = asc.getNumAscenseur();
         //Etage etageRenvoye = null;
+        EnregistrementConf conf = new EnregistrementConf();
+        if(isNight()){
+            HashMap map =  conf.getConfigJournee();
+        }else{
+            HashMap map =  conf.getConfigNuitWeekEnd();
+        }
+        
+
 
         switch(numAscenseur){
-            case 1:
-                    return new Etage(10);
+            case 0:
+                    return new Etage(2);
             default:
                     return null;
 
@@ -610,7 +687,7 @@ public class Immeuble extends JFrame implements Runnable{
             val = Math.abs(etageNum - listeAscenseur.get(j).getEtageCourant());
             //System.out.println("val : " + val +"Etage  : "+etageNum);
             //On change la valeur de valTest si on a trouvé plus petit
-            if(val < valTest && listeAscenseur.get(j).getNbPersonne() == 0 ){
+            if(val < valTest && listeAscenseur.get(j).getNbPersonne() == 0 && !asc.getMaintenance()){
                 valTest = val;
                 ascLePlusProcheVide = listeAscenseur.get(j);
             }
@@ -658,7 +735,7 @@ public class Immeuble extends JFrame implements Runnable{
     private static Ascenseur unDesAscenseurMonte(){
         Ascenseur asc = null;
         for(int j =0; j<listeAscenseur.size();j++){
-            if(listeAscenseur.get(j).isMonte() && listeDestinationAscenseur.get(j) != -1){
+            if(listeAscenseur.get(j).isMonte() && listeDestinationAscenseur.get(j) != -1 && !listeAscenseur.get(j).getMaintenance()){
                 asc = listeAscenseur.get(j);
                 break;
             }
@@ -669,7 +746,7 @@ public class Immeuble extends JFrame implements Runnable{
     private static Ascenseur unDesAscenseurdescend(){
         Ascenseur asc = null;
         for(int j =0; j<listeAscenseur.size();j++){
-            if((!listeAscenseur.get(j).isMonte() || (listeAscenseur.get(j).getNbPersonne() != 0 && !listeAscenseur.get(j).getListePersonne().get(0).veutMonter() )  )&& listeDestinationAscenseur.get(j) != -1){
+            if(!listeAscenseur.get(j).getMaintenance() && (!listeAscenseur.get(j).isMonte() || (listeAscenseur.get(j).getNbPersonne() != 0 && !listeAscenseur.get(j).getListePersonne().get(0).veutMonter() )  )&& listeDestinationAscenseur.get(j) != -1){
                 asc = listeAscenseur.get(j);
                 break;
             }
