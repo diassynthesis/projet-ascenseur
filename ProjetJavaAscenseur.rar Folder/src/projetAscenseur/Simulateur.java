@@ -130,7 +130,7 @@ public class Simulateur extends JFrame{
     }
 
 
-    public Manager getManager(){
+    synchronized public Manager getManager(){
         return this.manager;
     }
 
@@ -235,7 +235,7 @@ public class Simulateur extends JFrame{
         nbPersText.setText(""+10);
         
         capaciteAscText = new JTextField(3);
-        capaciteAscText.setText(""+5);
+        capaciteAscText.setText(""+15);
         capaciteAscLabel = new JLabel("Capacité Ascenseur : ");
         
         //composants graphiques de l'onglet Resultats
@@ -329,7 +329,7 @@ public class Simulateur extends JFrame{
         for (int i = 0; i<44;i++){
     		listNbEtages.addItem(i+2);
         }
-        listNbEtages.setSelectedIndex(4);
+        listNbEtages.setSelectedIndex(20);
         //creation de la liste deroulante du nombres de personnes à ajouter en cours de simulation(onglet Modification)
         nbPersAjout = new JComboBox();
         for (int i = 2; i<11;i++){
@@ -385,7 +385,9 @@ public class Simulateur extends JFrame{
         //ajout des composants graphique à la fenêtre principal sous forme d'onglets
         setLayout(new GridLayout(1,0));
         initMenuPlugin();
-        comportement = (ComportementAbstrait)plugins[0];
+        comportement = (ComportementAbstrait)plugins[5];
+        System.out.println("AAAAAA"+comportement.getName());
+
         onglets.addTab("Controle",panelControle);
         onglets.addTab("Parametres",paramPanel);
         onglets.addTab("Modifications",modifPanel);
@@ -400,8 +402,10 @@ public class Simulateur extends JFrame{
         //**************************creation des ecouteurs sur les boutons*************************
         start.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
+
                 
                 if(verifChampNbPersonne() && verifChampCapacite()){
+                    
                     miseAjourBoutonCreation();
                     //creation immeuble
                     int tmp = (Integer)listNbEtages.getSelectedItem();
@@ -412,16 +416,18 @@ public class Simulateur extends JFrame{
                     //creation des ascenseurs 
                     creationAscenseurs(nbAscenseurBox.getSelectedIndex());
                     
-   
+                    while(getManager() == null);
+                    manager.initValues();
                     setEnCreation(false);
                     
                     menuPlugin2.setEnabled(true);
+
+                    
                     }
                  else {
-                    manager.initValues();
+                    
                     return;
                  }
-                 manager.initValues();
 
                 //initialise les valeurs des etats dans l'inteface du manager
             }
@@ -537,6 +543,8 @@ public class Simulateur extends JFrame{
 	                   if(fabrique instanceof GroupeMonteImpl || fabrique instanceof GroupeAleatoireImpl ||fabrique instanceof PersGroupeFactory)
 	                    {
 	                         p =fabrique.getPersonne(nbPersExistante,personneTotal);
+
+                                 immeuble.ajouterAppel(p.getEtageDepart(),p.getEtageArrive(),p.veutMonter());
 	                         p.ajouterDansListe(p.getEtageDepart());
 	                         Immeuble.getListePersonnesCrees().add(p);
 	                         i+=p.getTaille()-1;
@@ -544,6 +552,7 @@ public class Simulateur extends JFrame{
 	                    }
 	                    else {
 	                        p =fabrique.getPersonne(nbPersExistante,personneTotal);
+                                immeuble.ajouterAppel(p.getEtageDepart(),p.getEtageArrive(),p.veutMonter());
 	                        p.ajouterDansListe(p.getEtageDepart());
 	                        Immeuble.getListePersonnesCrees().add(p);
 	                        p.appuyerBoutonAscenseur();
@@ -558,7 +567,7 @@ public class Simulateur extends JFrame{
 	                    }
 	                }
                 }else{
-                	afficheMessage("Vous avez rentrer un nombre de personnes trop �lev�" +
+                	afficheMessage("Vous avez rentrer un nombre de personnes trop eleve" +
                     ", le maximum est de 300 personnes");
             }
             }
@@ -660,6 +669,7 @@ public class Simulateur extends JFrame{
             for(int i=0;i<nbPersChoisi;i++){
                 if(fabrique instanceof GroupeMonteImpl || fabrique instanceof GroupeAleatoireImpl ||fabrique instanceof PersGroupeFactory){
                     Personnes p =fabrique.getPersonne(i,nbPersChoisi);
+                    immeuble.ajouterAppel(p.getEtageDepart(),p.getEtageArrive(),p.veutMonter());
                     p.ajouterDansListe(p.getEtageDepart());
                     Immeuble.getListePersonnesCrees().add(p);
                     i+=p.getTaille()-1;
@@ -667,6 +677,7 @@ public class Simulateur extends JFrame{
                 }
                 else {
                      Personnes p =fabrique.getPersonne(i,nbPersChoisi);
+                     immeuble.ajouterAppel(p.getEtageDepart(),p.getEtageArrive(),p.veutMonter());
                     p.ajouterDansListe(p.getEtageDepart());
                     Immeuble.getListePersonnesCrees().add(p);
                     p.appuyerBoutonAscenseur();    
@@ -747,7 +758,7 @@ public class Simulateur extends JFrame{
                 nbPersChoisi = 1;
             }
             if(nbPersChoisi > 300){
-                afficheMessage("Vous avez rentrer un nombre de personnes trop �lev�" +
+                afficheMessage("Vous avez rentrer un nombre de personnes trop eleve" +
                         ", le maximum est de 300 personnes");
                 return false;
             }
