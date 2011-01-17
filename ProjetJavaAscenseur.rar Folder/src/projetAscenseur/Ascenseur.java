@@ -69,7 +69,8 @@ public class Ascenseur extends JFrame implements Runnable {
     public Ascenseur(int nbPersonneMax, int numAscenseur, ComportementAbstrait comportement){
         super("Ascenseur");
         this.numAscenseur = numAscenseur;
-        System.out.print(numAscenseur+" ");
+        //Pour ne pas les initialiser au même etage
+        etageCourant = (5 * numAscenseur) % Immeuble.getNBEtage();
         setTemporisation(500);
         nbPersonneActuel = 0;
         setComportement(comportement);
@@ -152,7 +153,7 @@ public class Ascenseur extends JFrame implements Runnable {
     /**
      * todo getMaintenance
      */
-    public boolean getMaintenance(){
+    synchronized public boolean getMaintenance(){
         return this.maintenance;
     }
     
@@ -170,7 +171,7 @@ public class Ascenseur extends JFrame implements Runnable {
         ascenseurPanel.setBackground(Color.BLACK);
         ascenseurPanel.setPreferredSize(dimension);
         this.setBackground(new Color(0,255,255));
-        this.setLocation((320+(numAscenseur*110)),Math.round(Immeuble.getDimension().height)-Math.round(Immeuble.getTailleEtage()));
+        this.setLocation((320+(numAscenseur*110)),Math.round(Immeuble.getDimension().height)-Math.round(Immeuble.getTailleEtage()*this.getEtageCourant()));
         this.add(ascenseurPanel );
         //enlever les bordures de la fenetre
         setUndecorated(true);
@@ -207,7 +208,7 @@ public class Ascenseur extends JFrame implements Runnable {
     public void run(){
         while(true){
             //tant qu'il y aura des personnes en mouvement 
-            while(Immeuble.getListeAppel_Attente().size() > 0 || nbPersonneActuel > 0 && !getMaintenance()){
+            while(Immeuble.getListeAppel_Attente().size() > 0 || nbPersonneActuel > 0 || this.getEtageCourant() != Immeuble.replacementAscenseur(this).getNumEtage()){
                     comportement.seDeplacer();
                 try {
                     validate(); repaint();
@@ -287,6 +288,9 @@ public class Ascenseur extends JFrame implements Runnable {
             int value = this.getEtageCourant()+1;
             this.setEtageCourant(value);
             //todo change le libel du manager
+
+            //on bloque pour etre sur que l'initialisation du manager s'est terminé
+            while(this.immeuble.getManager() == null);
             Manager mana = this.immeuble.getManager();
             mana.setValuesAsc(this.numAscenseur, this.etageCourant, 1500);
 
