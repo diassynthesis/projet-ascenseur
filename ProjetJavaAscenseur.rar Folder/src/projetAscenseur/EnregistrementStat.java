@@ -147,7 +147,7 @@ public class EnregistrementStat extends ApplicationFrame {
         for (int i = 0; i < nbAsc; i++) {
             System.out.println("ascenseur " + i);
             arr = (ArrayList) sta.get(new Integer(i));
-            System.out.print(arr.toString());
+            //System.out.print(arr.toString());
 
             if (arr != null) {
                 if (ascenseurs[i] == 1) {
@@ -425,7 +425,7 @@ public class EnregistrementStat extends ApplicationFrame {
      * @sauvegarde
      */
     public void sauvegarde() {
-        System.out.println("Sauvegarde des statistiques");
+        //System.out.println("Sauvegarde des statistiques");
         try {
             XMLEncoder encoderStats = new XMLEncoder(new FileOutputStream(StatsFile));
 
