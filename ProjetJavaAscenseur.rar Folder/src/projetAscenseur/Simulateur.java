@@ -421,6 +421,7 @@ public class Simulateur extends JFrame{
                     setEnCreation(false);
                     
                     menuPlugin2.setEnabled(true);
+                    manager.getjComboBoxPlugin().setEnabled(true);
 
                     
                     }
@@ -452,6 +453,8 @@ public class Simulateur extends JFrame{
                 menuPlugin2.setEnabled(false);
                 listAscenseur.clear();
                 manager.initValues();
+                manager.getjComboBoxPlugin().setEnabled(false);
+
                 //manager.initValueBoutonAsc();
 
             }

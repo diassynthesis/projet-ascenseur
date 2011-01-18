@@ -44,6 +44,8 @@ public class Manager extends JFrame {
     private static boolean enCreation = true;
     private EnregistrementConf enregistrementConf = null;
     private EnregistrementStat enregistrementStat = null;
+    private EnregistrementStat enregistrementStatTempsMoyen = null;
+
     //***INTERFACE******//
     // Variables declaration - do not modify
     private javax.swing.JButton jButtonDemarrerGene;
@@ -140,6 +142,9 @@ public class Manager extends JFrame {
         return rootPane.hasFocus();
     }
 
+    public JComboBox getjComboBoxPlugin(){
+        return jComboBoxPlugin;
+    }
     //******************************METHODES*********************************
 
     /**
@@ -182,9 +187,11 @@ public class Manager extends JFrame {
             //init fenetre de variables
             enregistrementConf = new EnregistrementConf();
             enregistrementStat = new EnregistrementStat();
+            enregistrementStatTempsMoyen = new EnregistrementStat(3);
+
             enregistrementConf.setVisible(false);
             enregistrementStat.setVisible(false);
-
+            enregistrementStatTempsMoyen.setVisible(false);
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
@@ -584,6 +591,13 @@ public class Manager extends JFrame {
         jMenuStatistiques.add(jMenuItemConso);
 
         jMenuItemTmoyen.setText("Temps moyen");
+
+        jMenuItemTmoyen.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemTempsMoyenActionPerformed(evt);
+            }
+        });
         jMenuStatistiques.add(jMenuItemTmoyen);
 
         jMenuBar1.add(jMenuStatistiques);
@@ -670,6 +684,10 @@ public class Manager extends JFrame {
     private void jMenuItemConsoActionPerformed(java.awt.event.ActionEvent evt) {
         //this.enregistrementStat.initChart();
         enregistrementStat.setVisible(true);
+    }
+    private void jMenuItemTempsMoyenActionPerformed(java.awt.event.ActionEvent evt) {
+        //this.enregistrementStat.initChart();
+        enregistrementStatTempsMoyen.setVisible(true);
     }
 
     private void jButtonMaintenanceGeneActionPerformed(java.awt.event.ActionEvent evt) {
@@ -759,7 +777,8 @@ public class Manager extends JFrame {
             i++;
         }
         // on active les bouton apres le start
-        this.jButtonMaintenanceGene.setEnabled(true);
+        this.jButtonMaintenanceGene.setEnabled(false);
+        this.jComboBoxPlugin.setEnabled(false);
         //this.jButtonDemarrerGene.setEnabled(true);
 
     }
@@ -913,6 +932,12 @@ public class Manager extends JFrame {
         this.enregistrementStat.addStatistiques(date, numAsc, direction);
         this.enregistrementStat.initChart();
         //enregistrementStat.setVisible(true);
+    }
+
+    public void saveStatistiqueTempsMoyen(Date date, Long time) {
+        this.enregistrementStatTempsMoyen.addStatistiquesTempsMoyen(date, time);
+        this.enregistrementStatTempsMoyen.initChart();
+
     }
 
     ///menu des plugin

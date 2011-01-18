@@ -231,8 +231,10 @@ public class Immeuble extends JFrame implements Runnable{
                     for(int i=0; i<listePersonnesCrees.size();i++)
                     {
                        Personnes pers = listePersonnesCrees.get(i);
-                       pers.commencerAttente(); 
+                       pers.commencerAttente();
+                       long test = System.currentTimeMillis()-pers.getDebut();
                        pers.setTpsArrive(System.currentTimeMillis()-pers.getDebut());
+
                        if(listePersonneArrivee.contains(pers))
                        {
                            long time = System.currentTimeMillis()-pers.getDebut();
