@@ -9,6 +9,7 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import java.io.*;
+import java.util.Date;
 /**
  * classe abstraite representant les personnes (groupe et personneSeule
  * @author Checconi maxime, Pilot guillaume et Canessa Marine
@@ -211,6 +212,11 @@ public abstract class Personnes extends JLabel{
      */
     public void descendreDeAscenseur(Ascenseur asc){
 
+        Manager mana = asc.getImmeuble().getManager();
+        Date maDate = new Date();
+       // System.out.println(this.debut);
+        mana.saveStatistiqueTempsMoyen(maDate,System.currentTimeMillis()-this.debut);
+        this.debut = System.currentTimeMillis();
         supprimerDansListe(asc);
     	ajouterDansListe(this.getEtageArrive());
         Immeuble.addPersArrivee(this); 
@@ -218,6 +224,9 @@ public abstract class Personnes extends JLabel{
         this.setEstDsAsc(false);
         setColor(Color.gray);
         updateJLabelPers();
+
+        //Enregistrement du temps d'attente de la personne
+
 
         System.out.println("Descend de l'ascenseur"); //todo
     }
