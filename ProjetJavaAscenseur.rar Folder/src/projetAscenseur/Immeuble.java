@@ -349,7 +349,7 @@ public class Immeuble extends JFrame implements Runnable{
      * ajoute un ascennseur dans l'immeuble
      * @param asc l'ascenseur a ajouter
      */
-     public static void ajouterAscenseur(Ascenseur asc){
+     synchronized public static void ajouterAscenseur(Ascenseur asc){
     	listeAscenseur.add(asc);
         //Ajout de la destination null pour l'ascenseur ajouté
         listeDestinationAscenseur.add(asc.getNumAscenseur(), -1);
@@ -572,7 +572,7 @@ public class Immeuble extends JFrame implements Runnable{
         //On regarde l'appel le plus haut 
         if(appelLePlushaut.getSource().getNumEtage() != -1){
             //Si l'ascenseur courant est vide et qu'il n'a pas de destination
-            if(asc.getListePersonne().isEmpty() && listeDestinationAscenseur.get(asc.getNumAscenseur()) == -1){
+            if(asc.getListePersonne().isEmpty() && !listeDestinationAscenseur.isEmpty() && listeDestinationAscenseur.get(asc.getNumAscenseur()) == -1){
 
                 //On récupere les ascenseurs en cours de déplacement
                 ascenseurQuiMonte = unDesAscenseurMonte();
@@ -645,6 +645,7 @@ public class Immeuble extends JFrame implements Runnable{
     }
     public static Etage replacementAscenseur(Ascenseur asc){
         int numAscenseur = asc.getNumAscenseur();
+        Etage eta = null;
         //Etage etageRenvoye = null;
         EnregistrementConf conf = new EnregistrementConf();
         if(isNight()){
@@ -657,12 +658,14 @@ public class Immeuble extends JFrame implements Runnable{
 
         switch(numAscenseur){
             case 0:
-                    return new Etage(2);
+                    eta = new Etage(2);
+                    break;
+                    
             default:
-                    return null;
+                    eta = new Etage(15);
 
         }
-
+        return eta;
     }
 
     public static boolean quelquunAprendreIci(Ascenseur asc){
