@@ -47,11 +47,11 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
                     int etageAppelant = asc.getListeAppels().get(0).getDest().getNumEtage();
                     if(asc.getEtageCourant()<etageAppelant ){
                     //if(Immeuble.quelquunAprendreIci(asc))
-                    //attendre();
+                    attendre();
                     asc.monter();
                     }
                     else if(asc.getEtageCourant()>etageAppelant){
-                    //attendre();
+                    attendre();
                     asc.descendre();
                     }
                     else{
@@ -79,19 +79,19 @@ public class ComportementOptimisationEnergie implements ComportementAbstrait{
                 }
                 else {
                     // on arrive a l'etage de la personne on regle l'ascenseur en fonction de la personne
-                    if(etage.getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
+                    if(!etage.getListePersonne().isEmpty() && etage.getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
                         asc.setMonte(true);
                         attendre();
                     }
-                    else if(etage.getListePersonne().get(0).veutMonter() == false && !asc.isMonte()){
+                    else if(!etage.getListePersonne().isEmpty() && etage.getListePersonne().get(0).veutMonter() == false && !asc.isMonte()){
                         asc.setMonte(false);
                         attendre();
                     }
-                    else if(Immeuble.InterogeImmeublePourDeplacement(asc).getListePersonne().get(0).veutMonter() == true && !asc.isMonte()){
+                    else if(!Immeuble.InterogeImmeublePourDeplacement(asc).getListePersonne().isEmpty() && Immeuble.InterogeImmeublePourDeplacement(asc).getListePersonne().get(0).veutMonter() == true && !asc.isMonte()){
                         asc.setMonte(true);
                         attendre();
                     }
-                    else if(etage.getListePersonne().get(0).veutMonter() == false && asc.isMonte()){
+                    else if(!etage.getListePersonne().isEmpty() && etage.getListePersonne().get(0).veutMonter() == false && asc.isMonte()){
                         asc.setMonte(false);
                         attendre();
                     }

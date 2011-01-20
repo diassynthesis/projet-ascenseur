@@ -53,6 +53,7 @@ public class Identification extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabelAuthentification = new javax.swing.JLabel();
         jLabelResultat = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,6 +84,8 @@ public class Identification extends javax.swing.JFrame {
 
         jLabelResultat.setText("Veuillez vous identifier");
 
+        jLabel3.setIcon(new javax.swing.ImageIcon("/home/fabrice/NetBeansProjects/ProjetAscenseur10012011/ProjetJavaAscenseur.rar Folder/login_splash.png")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -106,12 +109,18 @@ public class Identification extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(102, 102, 102)
                         .addComponent(jLabelResultat)))
-                .addContainerGap(141, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(98, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(102, 102, 102)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldIdentifiant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -161,6 +170,7 @@ public class Identification extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelAuthentification;
     private javax.swing.JLabel jLabelResultat;
     private javax.swing.JPasswordField jPasswordFieldPWD;

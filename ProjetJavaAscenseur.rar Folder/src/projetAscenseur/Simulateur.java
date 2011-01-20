@@ -152,7 +152,7 @@ public class Simulateur extends JFrame{
             PluginLoader = new PluginLoader("plugins");
             PluginLoader.loadPlugins();
             plugins = PluginLoader.getPluginInstances();
-            System.out.println(plugins.length);
+            //System.out.println(plugins.length);
             setJMenuBar(mb);
             buildPluginMenu();
         } catch (MalformedURLException ex) {
@@ -386,7 +386,7 @@ public class Simulateur extends JFrame{
         setLayout(new GridLayout(1,0));
         initMenuPlugin();
         comportement = (ComportementAbstrait)plugins[5];
-        System.out.println("AAAAAA"+comportement.getName());
+        System.out.println("Comportement chargé par défaut"+comportement.getName());
 
         onglets.addTab("Controle",panelControle);
         onglets.addTab("Parametres",paramPanel);
