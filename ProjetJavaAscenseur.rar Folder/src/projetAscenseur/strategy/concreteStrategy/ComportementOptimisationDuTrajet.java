@@ -79,19 +79,19 @@ public class ComportementOptimisationDuTrajet implements ComportementAbstrait{
                 }
                 else {
                     // on arrive a l'etage de la personne on regle l'ascenseur en fonction de la personne
-                    if(etage.getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
+                    if(!etage.getListePersonne().isEmpty() && etage.getListePersonne().get(0).veutMonter() == true && asc.isMonte()){
                         asc.setMonte(true);
                         attendre();
                     }
-                    else if(etage.getListePersonne().get(0).veutMonter() == false && !asc.isMonte()){
+                    else if(!etage.getListePersonne().isEmpty() && etage.getListePersonne().get(0).veutMonter() == false && !asc.isMonte()){
                         asc.setMonte(false);
                         attendre();
                     }
-                    else if(Immeuble.InterogeImmeublePourDeplacementTemporel(asc).getListePersonne().get(0).veutMonter() == true && !asc.isMonte()){
+                    else if(!Immeuble.InterogeImmeublePourDeplacementTemporel(asc).getListePersonne().isEmpty() && Immeuble.InterogeImmeublePourDeplacementTemporel(asc).getListePersonne().get(0).veutMonter() == true && !asc.isMonte()){
                         asc.setMonte(true);
                         attendre();
                     }
-                    else if(etage.getListePersonne().get(0).veutMonter() == false && asc.isMonte()){
+                    else if(!etage.getListePersonne().isEmpty() && etage.getListePersonne().get(0).veutMonter() == false && asc.isMonte()){
                         asc.setMonte(false);
                         attendre();
                     }
