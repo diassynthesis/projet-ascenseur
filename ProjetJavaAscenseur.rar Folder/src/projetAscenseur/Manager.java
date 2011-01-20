@@ -928,7 +928,7 @@ public class Manager extends JFrame {
 
     //+1 monte -1 descent
     public void saveStatistique(Date date, Integer numAsc, Integer direction) {
-        System.out.print(date.toString() + " -- " + numAsc.toString() + " -- " + direction.toString());
+        //System.out.print(date.toString() + " -- " + numAsc.toString() + " -- " + direction.toString());
         this.enregistrementStat.addStatistiques(date, numAsc, direction);
         this.enregistrementStat.initChart();
         //enregistrementStat.setVisible(true);
@@ -982,7 +982,7 @@ public class Manager extends JFrame {
             PluginLoader = new PluginLoader("plugins");
             PluginLoader.loadPlugins();
             plugins = PluginLoader.getPluginInstances();
-            System.out.println(plugins.length);
+            //System.out.println(plugins.length);
             //setJMenuBar(mb);
             buildPluginMenu();
         } catch (MalformedURLException ex) {

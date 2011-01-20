@@ -73,7 +73,7 @@ public class EnregistrementConf extends javax.swing.JFrame {
      * Permet la lecture dans le fichier de configuration
      */
     public EnregistrementConf() {
-        System.out.println("Debut du Enregistrement");
+        //System.out.println("Debut du Enregistrement");
         //initialise les composant le la fenetre
         initEnregistrement();
         initClassConfiguration();

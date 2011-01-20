@@ -34,7 +34,8 @@ public class Immeuble extends JFrame implements Runnable{
     private static ArrayList<Ascenseur> listeAscenseur;
     private static ArrayList<Etage> listeAppel;
     private static ArrayList<Integer> listeDestinationAscenseur;
-
+    private static ArrayList<Integer> listeReplacementJour;
+    private static ArrayList<Integer> listeReplacementNuit;
     
     //Rajouter pour nouveau comportement
     private static ArrayList<Appel> listeAppel_Dest;
@@ -247,8 +248,8 @@ public class Immeuble extends JFrame implements Runnable{
                                     l.accept(tpsVisitor);
                                     l.accept(humeurVisitor);
                                 }
-                                System.out.println(tpsVisitor.result());
-                                System.out.println(humeurVisitor.result());
+                                //System.out.println(tpsVisitor.result());
+                                //System.out.println(humeurVisitor.result());
                                 value++;
                             }  
                        }
@@ -449,11 +450,10 @@ public class Immeuble extends JFrame implements Runnable{
     //********************************* Methodes pour la gestion d'économie de temps ************************
     synchronized public static Etage InterogeImmeublePourDeplacementTemporel(Ascenseur asc){
 
-        isNight();
+        
         if(listeAppel_Attente.isEmpty()){
             //On ve raplacer les différents ascenseurs
-            Etage eta =  new Etage(2);
-            return eta;
+            return replacementAscenseur(asc);
         }
 
         //Etage d'appel est-il supérieur ?
@@ -544,12 +544,12 @@ public class Immeuble extends JFrame implements Runnable{
      */
         synchronized public static Etage InterogeImmeublePourDeplacement(Ascenseur asc){
 
-        isNight();
-        if(listeAppel_Attente.isEmpty()){
+        
+        /*if(listeAppel_Attente.isEmpty()){
             //On ve raplacer les différents ascenseurs
             Etage eta =  new Etage(2);
             return eta;
-        }
+        }*/
 
         //Etage d'appel est-il supérieur ?
 
@@ -572,7 +572,9 @@ public class Immeuble extends JFrame implements Runnable{
         //On regarde l'appel le plus haut 
         if(appelLePlushaut.getSource().getNumEtage() != -1){
             //Si l'ascenseur courant est vide et qu'il n'a pas de destination
-            if(asc.getListePersonne().isEmpty() && !listeDestinationAscenseur.isEmpty() && listeDestinationAscenseur.get(asc.getNumAscenseur()) == -1){
+            if(asc.getListePersonne()!= null && asc.getListePersonne().isEmpty() &&
+                     !listeDestinationAscenseur.isEmpty()
+                    && listeDestinationAscenseur.get(asc.getNumAscenseur()) == -1){
 
                 //On récupere les ascenseurs en cours de déplacement
                 ascenseurQuiMonte = unDesAscenseurMonte();
@@ -637,7 +639,7 @@ public class Immeuble extends JFrame implements Runnable{
         SimpleDateFormat sdf = new SimpleDateFormat("HH");
         Date d = new Date();  // convert string to date
         
-        if(d.getHours() > 19 && d.getHours() < 7)
+        if(d.getHours() > 19 || d.getHours() < 7)
             return true;
         else
             return false;
@@ -645,27 +647,153 @@ public class Immeuble extends JFrame implements Runnable{
     }
     public static Etage replacementAscenseur(Ascenseur asc){
         int numAscenseur = asc.getNumAscenseur();
+        int poids = 0;
         Etage eta = null;
         //Etage etageRenvoye = null;
-        EnregistrementConf conf = new EnregistrementConf();
-        if(isNight()){
-            HashMap map =  conf.getConfigJournee();
-        }else{
-            HashMap map =  conf.getConfigNuitWeekEnd();
-        }
+
         
+            
+        
+        EnregistrementConf conf = new EnregistrementConf();
 
+        //Si c'est la nuit et que le tableau n'est pas encore initialisé
+        if(isNight() && listeReplacementNuit == null){
+            listeReplacementNuit = new ArrayList<Integer>();
 
-        switch(numAscenseur){
-            case 0:
-                    eta = new Etage(2);
-                    break;
+            HashMap listePoids = new HashMap();
+            HashMap configJ =  conf.getConfigNuitWeekEnd();
+            float rdc = (  (1 / ((Integer)Immeuble.getNBEtage()).floatValue())   ) *100;
+            float poidsRDC =  (((Integer)configJ.get(new String("RdC"))).floatValue())/rdc ;
+            listePoids.put(4, poidsRDC);
+            //System.out.println(rdc);
+            float vingtPremiersEtages = (20 /  ((Integer)Immeuble.getNBEtage()).floatValue() ) *100;
+            float poidsVingtPremiersEtages = (((Integer)configJ.get(new String("vingtPremiersEtages"))).floatValue()) /vingtPremiersEtages ;
+            listePoids.put(14, poidsVingtPremiersEtages);
+
+            float cinqDerniersEtages = (5 /  ((Integer)Immeuble.getNBEtage()).floatValue()) *100;
+            float poidsCinqDerniersEtages =  (((Integer)configJ.get(new String("cinqDerniersEtages"))).floatValue())/ cinqDerniersEtages ;
+            listePoids.put(40, poidsCinqDerniersEtages);
+
+            float sousSols = (4/ ((Integer)Immeuble.getNBEtage()).floatValue())*100;
+            float poidsSousSols =  (((Integer)configJ.get(new String("sousSols"))).floatValue())/sousSols;
+            listePoids.put(0, poidsSousSols);
+
+            float autreEtages = (15/  ((Integer)Immeuble.getNBEtage()).floatValue())*100;
+            float poidsAutreEtages =  (((Integer)configJ.get(new String("autresEtages"))).floatValue())/autreEtages ;
+            listePoids.put(24, poidsAutreEtages);
+            
+            Float max = 0.00f;
+                       
+            Map map = new HashMap();
+            map = listePoids;
+            Object cleMax = null;
+           //System.out.println("Init Nuit");
+            for(int i = 0 ; i< Immeuble.getListeAscenseur().size();i++){
+                //On recherche l'element de poids inferieur
+                Set cles = map.keySet();
+                Iterator it = cles.iterator();
+                max = 0.00f;
+                while (it.hasNext()){
                     
-            default:
-                    eta = new Etage(15);
+                    Object cle = it.next(); // tu peux typer plus finement ici
+                    System.out.println((Float)map.get(cle));
+                    Float valeur = (Float)map.get(cle); // tu peux typer plus finement ici
+                    if(valeur > max){
+                        max = valeur ;
+                        cleMax = cle;
+                    }
+                        
+                }
+                if(cleMax != null){
+                    System.out.println("Ajout");
+                    listeReplacementNuit.add(Immeuble.getListeAscenseur().get(i).getNumAscenseur(), (Integer)cleMax);
+                    listePoids.remove(cleMax);
+                    if(max > 1 && Immeuble.getListeAscenseur().size() > i+1){
+                        listeReplacementNuit.add(Immeuble.getListeAscenseur().get(i+1).getNumAscenseur(), (Integer)cleMax);
+                        listePoids.remove(cleMax);
+                        i++;
+                    }
+                }
+                
+            }
+            
 
+            
         }
-        return eta;
+        //Si c'est la journée et que le tableau n'est pas initialisé
+        else if (!isNight() && listeReplacementJour == null ){
+
+            listeReplacementJour = new ArrayList<Integer>();
+
+            HashMap listePoids = new HashMap();
+            HashMap configJ =  conf.getConfigJournee();
+            float rdc = (  (1 / ((Integer)Immeuble.getNBEtage()).floatValue())   ) *100;
+            float poidsRDC =  (((Integer)configJ.get(new String("RdC"))).floatValue())/rdc ;
+            listePoids.put(4, poidsRDC);
+            //System.out.println(rdc);
+            float vingtPremiersEtages = (20 /  ((Integer)Immeuble.getNBEtage()).floatValue() ) *100;
+            float poidsVingtPremiersEtages = (((Integer)configJ.get(new String("vingtPremiersEtages"))).floatValue()) /vingtPremiersEtages ;
+            listePoids.put(14, poidsVingtPremiersEtages);
+
+            float cinqDerniersEtages = (5 /  ((Integer)Immeuble.getNBEtage()).floatValue()) *100;
+            float poidsCinqDerniersEtages =  (((Integer)configJ.get(new String("cinqDerniersEtages"))).floatValue())/ cinqDerniersEtages ;
+            listePoids.put(40, poidsCinqDerniersEtages);
+
+            float sousSols = (4/ ((Integer)Immeuble.getNBEtage()).floatValue())*100;
+            float poidsSousSols =  (((Integer)configJ.get(new String("sousSols"))).floatValue())/sousSols;
+            listePoids.put(0, poidsSousSols);
+
+            float autreEtages = (15/  ((Integer)Immeuble.getNBEtage()).floatValue())*100;
+            float poidsAutreEtages =  (((Integer)configJ.get(new String("autresEtages"))).floatValue())/autreEtages ;
+            listePoids.put(24, poidsAutreEtages);
+
+            Float max = 0.00f;
+
+            Map map = new HashMap();
+            map = listePoids;
+            Object cleMax = null;
+           //System.out.println("Init Nuit");
+            for(int i = 0 ; i< Immeuble.getListeAscenseur().size();i++){
+                //On recherche l'element de poids inferieur
+                Set cles = map.keySet();
+                Iterator it = cles.iterator();
+                max = 0.00f;
+                while (it.hasNext()){
+
+                    Object cle = it.next(); // tu peux typer plus finement ici
+                    System.out.println((Float)map.get(cle));
+                    Float valeur = (Float)map.get(cle); // tu peux typer plus finement ici
+                    if(valeur > max){
+                        max = valeur ;
+                        cleMax = cle;
+                    }
+
+                }
+                if(cleMax != null){
+                    //System.out.println("Ajout");
+                    listeReplacementJour.add(Immeuble.getListeAscenseur().get(i).getNumAscenseur(), (Integer)cleMax);
+                    listePoids.remove(cleMax);
+                    if(max > 1 && Immeuble.getListeAscenseur().size() > i+1){
+                        listeReplacementJour.add(Immeuble.getListeAscenseur().get(i+1).getNumAscenseur(), (Integer)cleMax);
+                        listePoids.remove(cleMax);
+                        i++;
+                    }
+                }
+
+            }
+        }
+        //le tableau est déja initialisé et c'est la nuit
+        if (isNight() && listeReplacementNuit != null){
+            return new Etage(listeReplacementNuit.get(asc.getNumAscenseur()));
+        }
+        //le tableau est déja initialisé et c'est la journée
+        if (!isNight() && listeReplacementJour != null){
+            return new Etage(listeReplacementJour.get(asc.getNumAscenseur()));
+        }
+
+
+        
+        return null;
     }
 
     public static boolean quelquunAprendreIci(Ascenseur asc){
@@ -721,7 +849,7 @@ public class Immeuble extends JFrame implements Runnable{
 
         //On recherche dans les appels descendants ceux qui sont le plus haut
         for(int j =0; j<listeAppel_Attente.size();j++){
-            if(listeAppel_Attente.get(j).getSource().getNumEtage() > EtageLePlusHautDescend.getSource().getNumEtage() && !listeDestinationAscenseur.contains(listeAppel_Attente.get(j).getDest().getNumEtage()))
+            if(listeAppel_Attente.get(j).getSource().getNumEtage() < EtageLePlusHautDescend.getSource().getNumEtage() && !listeDestinationAscenseur.contains(listeAppel_Attente.get(j).getDest().getNumEtage()))
                 EtageLePlusHautDescend = listeAppel_Attente.get(j);
         }
 
