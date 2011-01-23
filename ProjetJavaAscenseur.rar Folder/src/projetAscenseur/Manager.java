@@ -368,6 +368,7 @@ public class Manager extends JFrame {
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(jPanel1Layout.createSequentialGroup().addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addGroup(jPanel1Layout.createSequentialGroup().addContainerGap().addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabelLabEtat1).addComponent(jLabelEtat1)).addGap(18, 18, 18).addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabelLabEtage1).addComponent(jLabelEtage1)).addGap(18, 18, 18).addComponent(jLabelLabConso1).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)).addGroup(jPanel1Layout.createSequentialGroup().addContainerGap().addComponent(jLabelConso1).addGap(18, 18, 18))).addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jButtonMaintenance1).addComponent(jButtonDemarrer1)).addContainerGap()));
 
+        
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Ascenseur"));
         jPanel3.setMinimumSize(new java.awt.Dimension(221, 200));
         jPanel3.setPreferredSize(new java.awt.Dimension(221, 200));

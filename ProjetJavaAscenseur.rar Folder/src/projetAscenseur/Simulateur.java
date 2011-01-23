@@ -153,7 +153,7 @@ public class Simulateur extends JFrame{
             PluginLoader.loadPlugins();
             plugins = PluginLoader.getPluginInstances();
             //System.out.println(plugins.length);
-            setJMenuBar(mb);
+            //setJMenuBar(mb);
             buildPluginMenu();
         } catch (MalformedURLException ex) {
             Logger.getLogger(Simulateur.class.getName()).log(Level.SEVERE, null, ex);
@@ -353,8 +353,10 @@ public class Simulateur extends JFrame{
         panelButtons.add(start);
         panelButtons.add(stop);
         panelButtons.add(rafraichir);
-        panelButtons.add(stats);
-        panelButtons.add(chargerPlugins);
+        //todo voir stats
+        //panelButtons.add(stats);
+        //todo charger plugin
+        //panelButtons.add(chargerPlugins);
         panelButtons.add(exit);
         panelControle.add(panelButtons, BorderLayout.NORTH);
         panelControle.add(panelSlider, BorderLayout.CENTER);
@@ -362,7 +364,8 @@ public class Simulateur extends JFrame{
         //ajout des composants graphique du modifPanel
         modifPanelGauche.setLayout(new GridLayout(0,1));
         modifPanelDroit.setLayout(new GridLayout(1,0));
-        modifPanelGauche.add(ajouterAscenseur);
+        //todo ajout ascenseur
+        //modifPanelGauche.add(ajouterAscenseur);
         modifPanelDroit.add(ajouterPersonne);
         modifPanelDroit.add(nbPersAjout);
         modifPanel.add(modifPanelGauche);
@@ -377,8 +380,9 @@ public class Simulateur extends JFrame{
         paramPanelHaut.add(typeDePersonneBox);
         paramPanelBas.add(nbAscenseur);
         paramPanelBas.add(nbAscenseurBox);
-        paramPanelBas.add(capaciteAscLabel);
-        paramPanelBas.add(capaciteAscText);
+        // todo capacité ascenseur
+        //paramPanelBas.add(capaciteAscLabel);
+        //paramPanelBas.add(capaciteAscText);
         paramPanel.add(paramPanelHaut);
         paramPanel.add(paramPanelBas);
         
