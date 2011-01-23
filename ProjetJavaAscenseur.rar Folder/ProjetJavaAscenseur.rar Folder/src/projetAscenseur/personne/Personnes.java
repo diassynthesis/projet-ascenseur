@@ -86,7 +86,7 @@ public abstract class Personnes extends JLabel{
     //*********************ACCESSEURS************************************
     public long getTpsArrive() {   return tpsArrive;  }
 
-    public void setTpsArrive(long tpsArrive) {   this.tpsArrive = tpsArrive;   }
+    public void setTpsArrive(long tpsArrive) {   this.tpsArrive = tpsArrive;  System.out.println("rouflette : "+tpsArrive); }
     
     public int getNum() {  return num; }
 

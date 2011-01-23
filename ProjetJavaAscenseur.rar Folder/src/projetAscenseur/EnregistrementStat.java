@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.util.*;
 import java.io.Serializable;
 import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -41,7 +42,7 @@ import org.jfree.util.Rotation;
  *
  * @author fabrice.bourgeon
  */
-public class EnregistrementStat extends ApplicationFrame {
+public class EnregistrementStat extends JFrame {
 
     // Variables d'interface
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItemAsc1;
@@ -366,6 +367,9 @@ public class EnregistrementStat extends ApplicationFrame {
 
 
 
+
+
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -544,10 +548,34 @@ public class EnregistrementStat extends ApplicationFrame {
             }
         });
 
+
+
+
+        //fermeture
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+
+
+        //dimention
+        this.setMinimumSize(new java.awt.Dimension(200, 200));
+        this.setPreferredSize(new java.awt.Dimension(700, 500));
+
+
         pack();
 
 
     }// </editor-fold>
+
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {
+            this.setVisible(false);
+    }
 
     /**
      * @sauvegarde

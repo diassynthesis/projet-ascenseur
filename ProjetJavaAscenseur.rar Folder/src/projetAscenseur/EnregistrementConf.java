@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import javax.swing.JFrame;
 
 /**
  *
@@ -607,9 +608,23 @@ public class EnregistrementConf extends javax.swing.JFrame {
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE));
 
+         //fermeture
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+
         pack();
     }// </editor-fold>
 
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {
+            this.setVisible(false);
+    }
 // </editor-fold>  
     private void jButtonValiderNuitWeekActionPerformed(java.awt.event.ActionEvent evt) {
             this.setValuesNuitWeek();
