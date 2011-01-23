@@ -20,12 +20,39 @@ public class ComportementIntelligent2 implements ComportementAbstrait{
         this.asc=asc;
     }
 
+
      /**
      * l'ascenseur se deplace dans les etages
      */
     public void seDeplacer()
     {
-        if((asc.isMonte())&&(!asc.isPortesOuvertes())) //si l'asc est en mode "monte"
+        //Dans le cas de maintenance
+        if(asc.getMaintenance()){
+            //soit je ne fais rien lorsqu'on a personne
+            if(asc.getListeAppels().isEmpty()){}
+            //soit je me charge de vider les personnes présentes dans l'ascenseur
+            else{
+                while(!asc.getListeAppels().isEmpty()){
+                    int etageAppelant = asc.getListeAppels().get(0).getDest().getNumEtage();
+                    if(asc.getEtageCourant()<etageAppelant ){
+                    //if(Immeuble.quelquunAprendreIci(asc))
+                    //attendre();
+                    asc.monter();
+                    }
+                    else if(asc.getEtageCourant()>etageAppelant){
+                    //attendre();
+                    asc.descendre();
+                    }
+                    else{
+                        attendre();
+                    }
+                }
+            }
+
+        }
+
+
+        else if((asc.isMonte()) && (!asc.isPortesOuvertes())) //si l'asc est en mode "monte"
         {
             if(asc.getEtageCourant()<Immeuble.getNBEtage()-1) //si il est pas arrivé en haut
             {
