@@ -342,7 +342,7 @@ public class Simulateur extends JFrame{
         typeDePersonneBox.addItem("GroupeAleatoire");
         typeDePersonneBox.addItem("GroupeEtPersonne");
         
-        for(int i = 1; i<=8;i++){
+        for(int i = 1; i<=6;i++){
             nbAscenseurBox.addItem(i);
         }
         
@@ -352,7 +352,8 @@ public class Simulateur extends JFrame{
         panelSlider.add(tempsSimulation);
         panelButtons.add(start);
         panelButtons.add(stop);
-        panelButtons.add(rafraichir);
+        //todo rafraichir 
+        //panelButtons.add(rafraichir);
         //todo voir stats
         //panelButtons.add(stats);
         //todo charger plugin
