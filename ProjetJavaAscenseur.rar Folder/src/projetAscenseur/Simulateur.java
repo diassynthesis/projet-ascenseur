@@ -427,10 +427,11 @@ public class Simulateur extends JFrame{
                     
                     menuPlugin2.setEnabled(true);
                     manager.getjComboBoxPlugin().setEnabled(true);
+                    manager.getjButtonMaintenanceGene().setEnabled(true);
+                    manager.getjComboBoxPlugin().setEnabled(true);
 
                     
-                    }
-                 else {
+                } else {
                     
                     return;
                  }
