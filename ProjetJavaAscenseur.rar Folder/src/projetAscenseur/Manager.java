@@ -142,9 +142,7 @@ public class Manager extends JFrame {
         return rootPane.hasFocus();
     }
 
-    public JComboBox getjComboBoxPlugin(){
-        return jComboBoxPlugin;
-    }
+  
     //******************************METHODES*********************************
 
     /**
@@ -192,6 +190,7 @@ public class Manager extends JFrame {
             enregistrementConf.setVisible(false);
             enregistrementStat.setVisible(false);
             enregistrementStatTempsMoyen.setVisible(false);
+            this.getjComboBoxPlugin().setEnabled(false);
 
         } catch (MalformedURLException ex) {
             Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
@@ -630,6 +629,14 @@ public class Manager extends JFrame {
         jButtonMaintenanceActionPerformed(4);
     }
 
+    public JButton getjButtonMaintenanceGene(){
+        return this.jButtonMaintenanceGene;
+    }
+
+    public JComboBox getjComboBoxPlugin(){
+        return this.jComboBoxPlugin;
+    }
+    
     private void jButtonMaintenance1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         Immeuble immeuble = simulateur.getImmeuble();
@@ -780,6 +787,7 @@ public class Manager extends JFrame {
         // on active les bouton apres le start
         this.jButtonMaintenanceGene.setEnabled(false);
         this.jComboBoxPlugin.setEnabled(false);
+
         //this.jButtonDemarrerGene.setEnabled(true);
 
     }
