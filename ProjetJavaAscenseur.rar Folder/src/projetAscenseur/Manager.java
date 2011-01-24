@@ -561,12 +561,12 @@ public class Manager extends JFrame {
 
         jButtonDemarrerGene.setText("Démarrage ");
 
-        jMenuFile.setText("File");
-        jMenuBar1.add(jMenuFile);
+        //jMenuFile.setText("File");
+        //jMenuBar1.add(jMenuFile);
 
-        jMenuEdit.setText("Edit");
+        jMenuEdit.setText("Edition");
 
-        jMenuItemAlgorithme.setText("Algorithme");
+        jMenuItemAlgorithme.setText("Configuration");
         jMenuItemAlgorithme.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
