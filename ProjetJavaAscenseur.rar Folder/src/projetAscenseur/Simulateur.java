@@ -337,10 +337,10 @@ public class Simulateur extends JFrame{
         }
         //creation de la liste deroulante du type de personnes voulue dans la simulation(Personne, Groupe...)
         typeDePersonneBox.addItem("SeuleAleatoire");
-        typeDePersonneBox.addItem("SeuleQuiMonte");
-        typeDePersonneBox.addItem("GroupeQuiMonte");
-        typeDePersonneBox.addItem("GroupeAleatoire");
-        typeDePersonneBox.addItem("GroupeEtPersonne");
+        //typeDePersonneBox.addItem("SeuleQuiMonte");
+        //typeDePersonneBox.addItem("GroupeQuiMonte");
+        //typeDePersonneBox.addItem("GroupeAleatoire");
+        //typeDePersonneBox.addItem("GroupeEtPersonne");
         
         for(int i = 1; i<=6;i++){
             nbAscenseurBox.addItem(i);
