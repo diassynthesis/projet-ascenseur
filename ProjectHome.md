@@ -1,0 +1,1 @@
+Ce projet est un projet d'école permettant de gérer une batterie d'ascenseurs.
